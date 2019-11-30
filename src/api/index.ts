@@ -1,56 +1,46 @@
-import axios from 'axios'
-import { prisma } from './generated/prisma-client'
-import uuidv5 from 'uuid/v5'
+import express, { Request, Response } from 'express'
+import path from 'path'
+import cors from 'cors'
+import bodyParser from 'body-parser'
 
-import config from './config'
+import { leagueApi } from './services'
+import * as database from './database'
+import { Summoner } from '../shared-types'
 
-type UserDetails = {
-    id: string,
-    accountId: string,
-    puuid: string,
-    name: string,
-    profileIconId: number,
-    revisionDate: number,
-    summonerLevel: number
-}
+const port = 5000
+const app = express()
 
-const getUserDetails = async (summonerName): Promise<UserDetails> => {
-    const url = `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${encodeURIComponent(summonerName)}`
-    const response = await axios({
-        method: 'GET',
-        url: url,
-        headers: {
-            "X-Riot-Token": config.API_KEY,
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+
+app.use(cors({
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}))
+
+app.use('/static', express.static(path.resolve(__dirname + '/dist')))
+app.use('/media', express.static(path.resolve(__dirname + '/media')))
+
+// app.get('*', (request: Request, response: Response) => {
+//     response.sendFile(path.resolve(__dirname, 'index.html'))
+// })
+
+app.get('/summoners', async (request: Request, response: Response) => {
+    let summonerDetails: Summoner | null
+    summonerDetails = await database.summoners.select(request.query.summoner_name)[0]
+
+    if (!summonerDetails) {
+        summonerDetails = await leagueApi.getSummonerDetails(request.query.summoner_name)
+
+        if (summonerDetails) {
+            await database.summoners.insert(summonerDetails)
         }
-    })
-
-    if (response.status === 200) {
-        return response.data
-    } else {
-        console.log(response.status)
-        throw new Error('whoops')
-    }
-}
-
-const main = async () => {
-    const MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
-    const { name, accountId, revisionDate, summonerLevel } = await getUserDetails('finx the minx')
-    try {
-        const newUser = await prisma.createUser({
-            name,
-            accountId,
-            id: uuidv5(accountId, MY_NAMESPACE) // Prisma won't take accountId as a unique ID. :shrug:
-        })
-        console.log(`Created new user: ${newUser.name} (ID: ${newUser.accountId})`)
-
-        // Read all users from the database and print them to the console
-        const allUsers = await prisma.users()
-        console.log(allUsers)
-    } catch (response) {
-        console.log(response)
     }
 
+    response
+        .status(200)
+        .send(summonerDetails)
+})
 
-}
-
-main()
+app.listen(port)
+console.log('server started on port ' + port)
