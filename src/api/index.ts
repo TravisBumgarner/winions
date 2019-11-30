@@ -3,12 +3,15 @@ import path from 'path'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 
+import { leagueApi } from './services'
+import * as database from './database'
+import { Summoner } from '../shared-types'
+
 const port = 5000
 const app = express()
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
-
 
 app.use(cors({
     origin: 'http://localhost:3000',
@@ -22,12 +25,21 @@ app.use('/media', express.static(path.resolve(__dirname + '/media')))
 //     response.sendFile(path.resolve(__dirname, 'index.html'))
 // })
 
-app.get('/helloworld', (request: Request, response: Response) => {
+app.get('/summoners', async (request: Request, response: Response) => {
+    let summonerDetails: Summoner | null
+    summonerDetails = await database.summoners.select(request.query.summoner_name)[0]
+
+    if (!summonerDetails) {
+        summonerDetails = await leagueApi.getSummonerDetails(request.query.summoner_name)
+
+        if (summonerDetails) {
+            await database.summoners.insert(summonerDetails)
+        }
+    }
+
     response
         .status(200)
-        .send({
-            message: "hello world"
-        })
+        .send(summonerDetails)
 })
 
 app.listen(port)
