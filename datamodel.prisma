@@ -1,0 +1,5 @@
+type User {
+  id: UUID! @unique @id
+  accountId: String!
+  name: String!
+}
