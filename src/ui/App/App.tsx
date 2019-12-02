@@ -1,5 +1,7 @@
 import React from 'react'
 import axios from 'axios'
+import { Query } from "react-apollo";
+import gql from "graphql-tag";
 
 import { Summoner } from '../../shared-types'
 
@@ -12,12 +14,15 @@ const App = () => {
     React.useEffect(() => {
     })
 
+    const getFoo = gql`
+    {
+        foo
+    }`
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        axios.get(`http://localhost:5000/summoners?summoner_name=${encodeURIComponent(summoner)}`)
-            .then(response => { setSummonerDetails(response.data) })
-            .catch(_error => setHasErrored(true))
-            .finally(() => setHasSearched(true))
+
+
     }
 
     const FormInput = (
@@ -40,16 +45,25 @@ const App = () => {
     } else if (!hasSearched) {
         SearchResults = <h3>Search Something.</h3>
     } else if (hasSearched && summonerDetails) {
-        SearchResults = <h3>{summonerDetails.name} - {summonerDetails.summonerLevel}</h3>
+        SearchResults = <h3>{summonerDetails.name} - {summonerDetails.id}</h3>
     } else if (hasSearched && !summonerDetails) {
         SearchResults = <h3>No user found.</h3>
     }
 
     return (
-        <div>
-            {FormInput}
-            {SearchResults}
-        </div >
+        <React.Fragment>
+            <Query query={getFoo} >
+                {({ loading, error, data }) => {
+                    if (loading) return <p>Loading…</p>
+                    if (error) return <p>Error</p>
+                    return <p>{JSON.stringify(data)}</p>
+                }}
+            </Query>
+            <div>
+                {FormInput}
+                {SearchResults}
+            </div >
+        </React.Fragment>
 
     )
 }

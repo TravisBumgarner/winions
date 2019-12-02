@@ -2,13 +2,15 @@ import express, { Request, Response } from 'express'
 import path from 'path'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import { graphql, buildSchema } from 'graphql'
+import { ApolloServer } from 'apollo-server-express';
+import depthLimit from 'graphql-depth-limit';
+import { createServer } from 'http';
 
 import { leagueApi } from './services'
 import * as database from './database'
 import { Summoner } from '../shared-types'
+import schema from './schema'
 
-const port = 5000
 const app = express()
 
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -18,6 +20,10 @@ app.use(cors({
     origin: 'http://localhost:3000',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }))
+
+app.get('/health-check', (request: Request, response: Response) => {
+    response.status(200).send('Ok.')
+})
 
 app.use('/static', express.static(path.resolve(__dirname + '/dist')))
 app.use('/media', express.static(path.resolve(__dirname + '/media')))
@@ -43,41 +49,15 @@ app.get('/summoners', async (request: Request, response: Response) => {
         .send(summonerDetails)
 })
 
-const userSchema = buildSchema(`
-    type User {
-        id: String,
-        accountId: String,
-        puuid: String,
-        name: String,
-        profileIconId: Int,
-        summonerLevel: Int
-    }
-    type Query {
-        user(name: String): [User]
-    }
-
-`)
-
-const usersQuery = `{
-    user {
-        id
-        name
-    }
-}`
-
-app.get('/allgraphql', async (request: Request, response: Response) => {
-    const summonerDetailsArray: Summoner[] | null = await database.summoners.allGraphQL()
-    const gqlResponse = await graphql(userSchema, usersQuery, { user: summonerDetailsArray })
-    response.setHeader('Content-Type', 'application/json');
-    response.status(200).send(JSON.stringify(
-        {
-            'result': 'success',
-            'data': gqlResponse.data
-        })
-    )
+const server = new ApolloServer({
+    schema,
+    validationRules: [depthLimit(7)],
 })
+server.applyMiddleware({ app, path: '/graphql' });
 
+const httpServer = createServer(app);
 
-
-app.listen(port)
-console.log('server started on port ' + port)
+httpServer.listen(
+    { port: 5000 },
+    (): void => console.log(`Server running on http://localhost:5000`)
+)
