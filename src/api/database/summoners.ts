@@ -24,4 +24,11 @@ const select = (name: string): Promise<Summoner> => {
         .catch(error => error)
 }
 
-export { insert, select }
+const allGraphQL = (): Promise<Summoner[]> => {
+    return knex('summoners')
+        .select()
+        .then(response => response)
+        .catch(error => error)
+}
+
+export { insert, select, allGraphQL }

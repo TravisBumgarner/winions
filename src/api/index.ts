@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import path from 'path'
 import cors from 'cors'
 import bodyParser from 'body-parser'
+import { graphql, buildSchema } from 'graphql'
 
 import { leagueApi } from './services'
 import * as database from './database'
@@ -41,6 +42,42 @@ app.get('/summoners', async (request: Request, response: Response) => {
         .status(200)
         .send(summonerDetails)
 })
+
+const userSchema = buildSchema(`
+    type User {
+        id: String,
+        accountId: String,
+        puuid: String,
+        name: String,
+        profileIconId: Int,
+        summonerLevel: Int
+    }
+    type Query {
+        user(name: String): [User]
+    }
+
+`)
+
+const usersQuery = `{
+    user {
+        id
+        name
+    }
+}`
+
+app.get('/allgraphql', async (request: Request, response: Response) => {
+    const summonerDetailsArray: Summoner[] | null = await database.summoners.allGraphQL()
+    const gqlResponse = await graphql(userSchema, usersQuery, { user: summonerDetailsArray })
+    response.setHeader('Content-Type', 'application/json');
+    response.status(200).send(JSON.stringify(
+        {
+            'result': 'success',
+            'data': gqlResponse.data
+        })
+    )
+})
+
+
 
 app.listen(port)
 console.log('server started on port ' + port)
