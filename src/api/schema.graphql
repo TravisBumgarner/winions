@@ -1,6 +1,8 @@
 type Summoner {
     name: String!
     id: String!
+    accountId: String!
+    summonerLevel: Int!
 }
 
 type Match {
@@ -16,6 +18,6 @@ type Match {
 
 
 type Query {
-    summoner(summonerName: String): [Summoner]
+    summoner(summonerName: String): Summoner
     match(accountId: String): [Match]
 }
