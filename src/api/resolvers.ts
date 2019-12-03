@@ -2,10 +2,9 @@ import { IResolvers } from 'graphql-tools';
 
 import * as database from './database'
 
-const resolverMap: IResolvers = {
+const resolvers: IResolvers = {
     Query: {
         summoner: async (_, { summonerName }) => {
-            console.log(summonerName)
             const result = summonerName
                 ? await database.summoners.selectBySummonerName(summonerName)
                 : await database.summoners.selectAll()
@@ -14,4 +13,4 @@ const resolverMap: IResolvers = {
     }
 }
 
-export default resolverMap
+export default resolvers

@@ -1,0 +1,8 @@
+type Summoner {
+    name: String!
+    id: String!
+}
+
+type Query {
+    summoner(summonerName: String): [Summoner]
+}
