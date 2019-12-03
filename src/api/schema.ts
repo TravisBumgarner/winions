@@ -5,9 +5,13 @@ import resolvers from './resolverMap'
 import { GraphQLSchema } from 'graphql'
 
 const typeDefs = `
+    type Summoner {
+        name: String!
+        id: String!
+    }
+
     type Query {
-        foo: String!
-        bar: String!
+        summoner(summonerName: String): [Summoner]
     }
 `
 

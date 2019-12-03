@@ -34,7 +34,7 @@ app.use('/media', express.static(path.resolve(__dirname + '/media')))
 
 app.get('/summoners', async (request: Request, response: Response) => {
     let summonerDetails: Summoner | null
-    summonerDetails = await database.summoners.select(request.query.summoner_name)[0]
+    summonerDetails = await database.summoners.selectBySummonerName(request.query.summoner_name)[0]
 
     if (!summonerDetails) {
         summonerDetails = await leagueApi.getSummonerDetails(request.query.summoner_name)

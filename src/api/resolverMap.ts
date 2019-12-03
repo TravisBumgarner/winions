@@ -1,18 +1,17 @@
 import { IResolvers } from 'graphql-tools';
 
-const foo = (_: void, args: void): string => {
-    return 'foo but separate';
-}
-
-const bar = (_: void, args: void): string => {
-    return 'bar but separate';
-}
+import * as database from './database'
 
 const resolverMap: IResolvers = {
     Query: {
-        foo,
-        bar
-    },
+        summoner: async (_, { summonerName }) => {
+            console.log(summonerName)
+            const result = summonerName
+                ? await database.summoners.selectBySummonerName(summonerName)
+                : await database.summoners.selectAll()
+            return result
+        }
+    }
 }
 
 export default resolverMap

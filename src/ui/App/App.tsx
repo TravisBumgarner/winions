@@ -14,9 +14,12 @@ const App = () => {
     React.useEffect(() => {
     })
 
-    const getFoo = gql`
+    const getSummoners = gql`
     {
-        foo
+        summoner(summonerName: "finx the minx") {
+            name
+            id
+        }
     }`
 
     const handleSubmit = (event) => {
@@ -52,7 +55,7 @@ const App = () => {
 
     return (
         <React.Fragment>
-            <Query query={getFoo} >
+            <Query query={getSummoners} >
                 {({ loading, error, data }) => {
                     if (loading) return <p>Loading…</p>
                     if (error) return <p>Error</p>
