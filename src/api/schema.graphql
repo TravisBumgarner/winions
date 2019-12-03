@@ -3,6 +3,19 @@ type Summoner {
     id: String!
 }
 
+type Match {
+    lane: String!
+    gameId: Int!
+    champion: Int!
+    platformId: String!
+    timestamp: Int!
+    queue: Int!
+    role: String!
+    season: Int!
+}
+
+
 type Query {
     summoner(summonerName: String): [Summoner]
+    match(accountId: String): [Match]
 }

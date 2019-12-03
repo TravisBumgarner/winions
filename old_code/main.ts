@@ -22,23 +22,23 @@
 //     }
 // }
 
-// const getMatches = async (encryptedAccountId) => {
-//     const url = `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${encryptedAccountId}`
-//     const response = await axios({
-//         method: 'GET',
-//         url: url, 
-//         headers: {
-//             "X-Riot-Token": "RGAPI-1944fc55-72e0-4a68-bcd2-831ae37157db",
-//         }
-//     })
+const getMatches = async (encryptedAccountId) => {
+    const url = `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${encryptedAccountId}`
+    const response = await axios({
+        method: 'GET',
+        url: url, 
+        headers: {
+            "X-Riot-Token": "RGAPI-1944fc55-72e0-4a68-bcd2-831ae37157db",
+        }
+    })
 
-//     if (response.status === 200){
-//         return response.data
-//     } else {
-//         console.log(response.status)
-//         throw new Error('whoops')
-//     }
-// }
+    if (response.status === 200){
+        return response.data
+    } else {
+        console.log(response.status)
+        throw new Error('whoops')
+    }
+}
 
 // const getMatchTimeline = async (matchId) => {
 //     const url = `https://na1.api.riotgames.com/lol/match/v4/timelines/by-match/${matchId}`

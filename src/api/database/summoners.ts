@@ -15,29 +15,19 @@ const insert = ({ id, accountId, puuid, name, profileIconId, revisionDate, summo
         .then(response => response)
         .catch(error => {
             console.log(error)
-            return [] as Summoner[]
+            return null
         })
 }
 
-const selectBySummonerName = (summonerName: string): Promise<Summoner[]> => {
+const selectBySummonerName = (summonerName: string): Promise<Summoner | null> => {
     return knex('summoners')
-        .select()
+        .select<Summoner[]>()
         .whereRaw("LOWER(name) LIKE '%' || LOWER(?) || '%' ", summonerName)
-        .then(response => response.length ? response : [])
+        .then(response => response.length ? response[0] : null)
         .catch(error => {
             console.log(error)
-            return [] as Summoner[]
+            return null
         })
 }
 
-const selectAll = (): Promise<Summoner[]> => {
-    return knex('summoners')
-        .select()
-        .then(response => response)
-        .catch(error => {
-            console.log(error)
-            return [] as Summoner[]
-        })
-}
-
-export { insert, selectAll, selectBySummonerName }
+export { insert, selectBySummonerName }

@@ -8,4 +8,17 @@ type Summoner = {
     summonerLevel: number
 }
 
-export { Summoner }
+// https://riot-api-libraries.readthedocs.io/en/latest/roleid.html
+type Match = {
+    lane: string
+    gameId: number
+    champion: number
+    platformId: string
+    timestamp: number
+    queue: number
+    role: string
+    season: number
+    accountId: string
+}
+
+export { Summoner, Match }
