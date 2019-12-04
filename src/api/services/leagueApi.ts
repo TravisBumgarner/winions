@@ -12,6 +12,7 @@ const getSummonerDetails = async (summonerName): Promise<Summoner | null> => {
             "X-Riot-Token": config.API_KEY,
         }
     })
+    console.log(response)
 
     if (response.status === 200) {
         return response.data
@@ -38,8 +39,10 @@ const getSummonerMatches = async (accountId: string): Promise<Match[] | null> =>
             ...rest,
             accountId
         }))
+        console.log(matchesMod[0])
         return matchesMod
     } else {
+        console.log(response.status)
         throw new Error('Failed to call getSummonerMatches')
     }
 }
