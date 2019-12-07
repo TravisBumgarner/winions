@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 
 import { leagueApi } from './services'
 import * as database from './database'
-import { Summoner } from '../shared-types'
+import { Summoner, Match } from '../shared-types'
 
 const app = express()
 
@@ -31,7 +31,6 @@ app.use('/media', express.static(path.resolve(__dirname + '/media')))
 app.get('/summoners', async (request: Request, response: Response) => {
     let summonerDetails: Summoner | null
     summonerDetails = await database.summoners.selectBySummonerName(request.query.summoner_name)[0]
-    console.log('RUDA', summonerDetails)
 
     if (!summonerDetails) {
         summonerDetails = await leagueApi.getSummonerDetails(request.query.summoner_name)
@@ -40,9 +39,30 @@ app.get('/summoners', async (request: Request, response: Response) => {
         }
     }
 
+    if (!summonerDetails) {
+        return response.status(404).send({ msg: "Summoner not found." })
+    }
+
+    let summonerMatches: Match[] | null
+    summonerMatches = await database.matches.selectByAccountId(summonerDetails.accountId)
+
+    if (!summonerMatches.length) {
+        summonerMatches = await leagueApi.getSummonerMatches(summonerDetails.accountId)
+        if (summonerMatches) {
+            await database.matches.insert(summonerDetails.accountId, summonerMatches)
+        }
+    }
+
+    if (!summonerMatches) {
+        return response.status(404).send({ msg: "No matches found for summoner." })
+    }
+
     response
         .status(200)
-        .send(summonerDetails)
+        .send({
+            summonerDetails,
+            summonerMatches
+        })
 })
 
 const port = 5000
