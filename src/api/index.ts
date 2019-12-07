@@ -31,10 +31,10 @@ app.use('/media', express.static(path.resolve(__dirname + '/media')))
 app.get('/summoners', async (request: Request, response: Response) => {
     let summonerDetails: Summoner | null
     summonerDetails = await database.summoners.selectBySummonerName(request.query.summoner_name)[0]
+    console.log('RUDA', summonerDetails)
 
     if (!summonerDetails) {
         summonerDetails = await leagueApi.getSummonerDetails(request.query.summoner_name)
-
         if (summonerDetails) {
             await database.summoners.insert(summonerDetails)
         }
@@ -45,7 +45,7 @@ app.get('/summoners', async (request: Request, response: Response) => {
         .send(summonerDetails)
 })
 
-httpServer.listen(
-    { port: 5000 },
-    (): void => console.log(`Server running on http://localhost:5000`)
-)
+const port = 5000
+app.listen(port, () => {
+    console.log(`Running on port ${port}`)
+})

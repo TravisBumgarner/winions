@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import config from '../../../config'
+import * as config from '../../../config'
 import { Summoner, Match } from '../../shared-types'
 
 const getSummonerDetails = async (summonerName): Promise<Summoner | null> => {
@@ -9,7 +9,7 @@ const getSummonerDetails = async (summonerName): Promise<Summoner | null> => {
         method: 'GET',
         url: url,
         headers: {
-            "X-Riot-Token": config.API_KEY,
+            "X-Riot-Token": config.LEAGUE_API_KEY,
         }
     })
     console.log(response)
@@ -29,7 +29,7 @@ const getSummonerMatches = async (accountId: string): Promise<Match[] | null> =>
         method: 'GET',
         url: url,
         headers: {
-            "X-Riot-Token": config.API_KEY,
+            "X-Riot-Token": config.LEAGUE_API_KEY,
         }
     })
 

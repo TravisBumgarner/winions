@@ -4,7 +4,7 @@ import axios from 'axios'
 import { Summoner } from '../../shared-types'
 
 const App = () => {
-    const [summoner, setSummoner] = React.useState<string>("");
+    const [summoner, setSummoner] = React.useState<string>("finx the minx");
     const [summonerDetails, setSummonerDetails] = React.useState<Summoner | null>(null)
     const [hasErrored, setHasErrored] = React.useState<boolean>(false)
     const [hasSearched, setHasSearched] = React.useState<boolean>(false)
@@ -13,7 +13,12 @@ const App = () => {
     })
 
     const handleSubmit = (event) => {
+        setHasErrored(false)
         event.preventDefault();
+        axios.get(`http://localhost:5000/summoners?summoner_name=${encodeURIComponent(summoner)}`)
+            .then(response => { setSummonerDetails(response.data) })
+            .catch(_error => setHasErrored(true))
+            .finally(() => setHasSearched(true))
     }
 
     const FormInput = (
