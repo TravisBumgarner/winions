@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import config from '../config'
+import config from '../../../config'
 import { Summoner, Match } from '../../shared-types'
 
 const getSummonerDetails = async (summonerName): Promise<Summoner | null> => {

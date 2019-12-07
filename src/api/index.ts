@@ -2,15 +2,10 @@ import express, { Request, Response } from 'express'
 import path from 'path'
 import cors from 'cors'
 import bodyParser from 'body-parser'
-import { ApolloServer, gql } from 'apollo-server-express'
-import depthLimit from 'graphql-depth-limit'
-import { createServer } from 'http'
-import fs from 'fs'
 
 import { leagueApi } from './services'
 import * as database from './database'
 import { Summoner } from '../shared-types'
-import resolvers from './resolvers'
 
 const app = express()
 
@@ -49,17 +44,6 @@ app.get('/summoners', async (request: Request, response: Response) => {
         .status(200)
         .send(summonerDetails)
 })
-
-const typeDefs = gql(fs.readFileSync(__dirname + '/schema.graphql', { encoding: 'utf8' }))
-
-const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    validationRules: [depthLimit(7)],
-})
-server.applyMiddleware({ app, path: '/graphql' });
-
-const httpServer = createServer(app);
 
 httpServer.listen(
     { port: 5000 },

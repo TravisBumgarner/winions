@@ -1,7 +1,5 @@
 import React from 'react'
 import axios from 'axios'
-import { Query } from "react-apollo";
-import gql from "graphql-tag";
 
 import { Summoner } from '../../shared-types'
 
@@ -14,18 +12,8 @@ const App = () => {
     React.useEffect(() => {
     })
 
-    const getSummoners = gql`
-    {
-        summoner(summonerName: "finx the minx") {
-            name
-            id
-        }
-    }`
-
     const handleSubmit = (event) => {
         event.preventDefault();
-
-
     }
 
     const FormInput = (
@@ -55,13 +43,6 @@ const App = () => {
 
     return (
         <React.Fragment>
-            <Query query={getSummoners} >
-                {({ loading, error, data }) => {
-                    if (loading) return <p>Loading…</p>
-                    if (error) return <p>Error</p>
-                    return <p>{JSON.stringify(data)}</p>
-                }}
-            </Query>
             <div>
                 {FormInput}
                 {SearchResults}
