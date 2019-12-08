@@ -3,7 +3,7 @@ import knex from '.'
 import { MatchMetadata } from '../../shared-types'
 
 const insertParticipantIdentities = async (gameId: number, participantsIdentities: MatchMetadata['participantIdentities']) => {
-    const participantsMod = participantsIdentities.map(({ participantId, player }) => {
+const participansIdentitiesMod = participantsIdentities.map(({ participantId, player }) => {
 
         const {
             currentPlatformId,
@@ -30,7 +30,7 @@ const insertParticipantIdentities = async (gameId: number, participantsIdentitie
         }
     })
 
-    const response = await knex('participantIdentities').insert(participantsMod)
+const response = await knex('participantIdentities').insert(participansIdentitiesMod)
     return
 }
 

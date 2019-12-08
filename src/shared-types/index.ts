@@ -49,26 +49,28 @@ type MatchMetadata = {
     gameCreation: number
 }
 
+type ParticipantFrames = {
+    [key: string]: {
+        totalGold: number
+        teamScore: number
+        participantId: number
+        level: number
+        currentGold: number
+        minionsKilled: number
+        dominionScore: number
+        // position: any  // This can be used later.
+        xp: number
+        jungleMinionsKilled: number
+    }
+}
+
 type MatchTimeline = {
     frameInterval: number
     frames: {
         timestamp: number
         events: any[]  // This can be expanded upon later.
-        participantFrames: {
-            [key: string]: {
-                totalGold: number
-                teamScore: number
-                participantId: number
-                level: number
-                currentGold: number
-                minionsKilled: number
-                dominionScore: number
-                // position: any  // This can be used later.
-                xp: number
-                jungleMinionsKilled: number
-            }
-        }
+        participantFrames: ParticipantFrames
     }[]
 }
 
-export { Summoner, Match, MatchMetadata, MatchTimeline }
+export { Summoner, Match, MatchMetadata, MatchTimeline, ParticipantFrames }
