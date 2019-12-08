@@ -18,7 +18,10 @@ const makeLeagueRequest = async (url, apiNameForErrorHandling, params = {}) => {
             return response.data
         } else if (
             response.status === 404
-            || response.status === 403
+        ) {
+            return null
+        } else if (
+            response.status === 403
             || response.status === 429
         ) {
             console.log(`Received status code: ${response.status} for ${apiNameForErrorHandling}`)
@@ -76,7 +79,7 @@ const bootstrapSummonerMatches = async (accountId: string): Promise<Match[] | nu
     return matches
 }
 
-const getMatchMetadata = async (gameId: number): Promise<MatchMetadata | null> => {
+const getMatchMetadata = async (gameId: number, accountId: string): Promise<MatchMetadata | null> => {
     const url = `https://na1.api.riotgames.com/lol/match/v4/matches/${gameId}`
     const matchMetadata = await makeLeagueRequest(url, 'getMatchMetadata')
 
@@ -93,6 +96,8 @@ const getMatchMetadata = async (gameId: number): Promise<MatchMetadata | null> =
         participantIdentities
     } = matchMetadata
 
+    const { participantId } = participantIdentities.find(({ player }) => { player.accountId === accountId })
+    
     return {
         gameId,
         seasonId,
@@ -104,7 +109,8 @@ const getMatchMetadata = async (gameId: number): Promise<MatchMetadata | null> =
         gameType,
         gameDuration,
         gameCreation: new Date(gameCreation),
-        participantIdentities: JSON.stringify(participantIdentities)
+        participantId,
+        accountId
     }
 }
 

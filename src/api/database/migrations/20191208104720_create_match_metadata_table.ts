@@ -12,7 +12,8 @@ export async function up(knex: Knex): Promise<void> {
         table.string('gameType')
         table.integer('gameDuration')
         table.timestamp('gameCreation')
-        table.jsonb('participantIdentities')
+        table.string('accountId')
+        table.integer('participantId')
     })
 }
 

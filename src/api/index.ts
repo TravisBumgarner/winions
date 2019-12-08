@@ -52,12 +52,12 @@ const getSummonerMatches = async (accountId: string) => {
     return summonerMatches
 }
 
-const getMatchMetadata = async (gameId: number) => {
+const getMatchMetadata = async (gameId: number, accountId: string) => {
     let matchMetadata: MatchMetadata | null
 
     matchMetadata = await database.matchMetadata.selectByGameId(gameId)
     if (!matchMetadata) {
-        matchMetadata = await leagueApi.getMatchMetadata(gameId)
+        matchMetadata = await leagueApi.getMatchMetadata(gameId, accountId)
         if (matchMetadata) {
             await database.matchMetadata.insert(matchMetadata)
         }
@@ -65,8 +65,8 @@ const getMatchMetadata = async (gameId: number) => {
     return matchMetadata
 }
 
-const getMatchesMetadata = async (gameIds: number[]) => {
-    const matchesMetadata = Promise.all(gameIds.map(gameId => getMatchMetadata(gameId)))
+const getMatchesMetadata = async (gameIds: number[], accountId: string) => {
+    const matchesMetadata = Promise.all(gameIds.map(gameId => getMatchMetadata(gameId, accountId)))
     return matchesMetadata
 }
 
@@ -102,8 +102,8 @@ app.get('/summoners', async (request: Request, response: Response) => {
     }
 
     const gameIds = summonerMatches.map(({ gameId }) => gameId)
-    const matchesMetadata = await getMatchesMetadata(gameIds)
-    const matchesTimeline = await getMatchesTimeline(gameIds)
+    const matchesMetadata = await getMatchesMetadata(gameIds, summonerDetails.accountId)
+    // const matchesTimeline = await getMatchesTimeline(gameIds)
 
     response
         .status(200)
@@ -111,7 +111,7 @@ app.get('/summoners', async (request: Request, response: Response) => {
             summonerDetails,
             summonerMatches,
             matchesMetadata,
-            matchesTimeline
+            // matchesTimeline
         })
 })
 
