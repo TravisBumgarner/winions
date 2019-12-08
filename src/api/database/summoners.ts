@@ -19,15 +19,12 @@ const insert = ({ id, accountId, puuid, name, profileIconId, revisionDate, summo
         })
 }
 
-const selectBySummonerName = (summonerName: string): Promise<Summoner | null> => {
-    return knex('summoners')
+const selectBySummonerName = async (summonerName: string): Promise<Summoner | null> => {
+    const response = await knex('summoners')
         .select<Summoner[]>()
-        .whereRaw("LOWER(name) LIKE '%' || LOWER(?) || '%' ", summonerName)
-        .then(response => response.length ? response[0] : null)
-        .catch(error => {
-            console.log(error)
-            return null
-        })
+        .whereRaw("LOWER(name) LIKE LOWER(?) ", summonerName)
+
+    return response.length ? response[0] : null
 }
 
 export { insert, selectBySummonerName }

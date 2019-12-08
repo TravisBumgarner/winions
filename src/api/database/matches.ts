@@ -10,19 +10,15 @@ const insert = (accountId: string, matches: Match[]) => {
         .then(response => response)
         .catch(error => {
             console.log(error)
-            return [] as Match[]
+            return null
         })
 }
 
-const selectByAccountId = (accountId: string): Promise<Match[]> => {
-    return knex('matches')
+const selectByAccountId = async (accountId: string): Promise<Match[]> => {
+    const response = await knex('matches')
         .select<Match[]>()
         .where('accountId', accountId)
-        .then(response => response.length ? response : [])
-        .catch(error => {
-            console.log(error)
-            return [] as Match[]
-        })
+    return response
 }
 
 export { insert, selectByAccountId }

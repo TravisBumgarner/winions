@@ -21,4 +21,32 @@ type Match = {
     accountId: string
 }
 
-export { Summoner, Match }
+type MatchMetadata = {
+    seasonId: number,
+    queueId: number,
+    gameId: number,
+    participantIdentities: {
+        player: {
+            currentPlatformId: string,
+            summonerName: string,
+            matchHistoryUri: string,
+            platformId: string,
+            currentAccountId: string,
+            profileIcon: number,
+            summonerId: string,
+            accountId: string
+        }
+        participantId: number
+    }[]
+    gameVersion: string
+    platformId: string
+    gameMode: string
+    mapId: number
+    gameType: string
+    teams: any[] // This can be expanded upon later.
+    participants: any[] // This can be expanded upon later.
+    gameDuration: number
+    gameCreation: number
+}
+
+export { Summoner, Match, MatchMetadata }

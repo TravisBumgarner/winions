@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 
 import { leagueApi } from './services'
 import * as database from './database'
-import { Summoner, Match } from '../shared-types'
+import { Summoner, Match, MatchMetadata } from '../shared-types'
 
 const app = express()
 
@@ -24,13 +24,10 @@ app.get('/health-check', (request: Request, response: Response) => {
 app.use('/static', express.static(path.resolve(__dirname + '/dist')))
 app.use('/media', express.static(path.resolve(__dirname + '/media')))
 
-// app.get('*', (request: Request, response: Response) => {
-//     response.sendFile(path.resolve(__dirname, 'index.html'))
-// })
 
-app.get('/summoners', async (request: Request, response: Response) => {
+const getSummonerDetails = async (request: Request) => {
     let summonerDetails: Summoner | null
-    summonerDetails = await database.summoners.selectBySummonerName(request.query.summoner_name)[0]
+    summonerDetails = await database.summoners.selectBySummonerName(request.query.summoner_name)
 
     if (!summonerDetails) {
         summonerDetails = await leagueApi.getSummonerDetails(request.query.summoner_name)
@@ -39,29 +36,63 @@ app.get('/summoners', async (request: Request, response: Response) => {
         }
     }
 
+    return summonerDetails
+}
+
+const getSummonerMatches = async (accountId: string) => {
+    let summonerMatches: Match[] | null
+
+    summonerMatches = await database.matches.selectByAccountId(accountId)
+    if (!summonerMatches.length) {
+        summonerMatches = await leagueApi.bootstrapSummonerMatches(accountId)
+        if (summonerMatches) {
+            await database.matches.insert(accountId, summonerMatches)
+        }
+    }
+    return summonerMatches
+}
+
+const getMatchMetadata = async (matchId: number) => {
+    let matchMetadata: MatchMetadata | null
+
+    matchMetadata = await database.matchMetadata.selectByMatchId(matchId)
+    if (!matchMetadata) {
+        matchMetadata = await leagueApi.getMatchMetadata(matchId)
+        if (matchMetadata) {
+            await database.matchMetadata.insert(matchMetadata)
+        }
+    }
+    return matchMetadata
+}
+
+const getMatchesMetadata = async (matches: Match[]) => {
+    const matchIds = matches.map(({ gameId }) => gameId)
+    const matchesMetadata = Promise.all(matchIds.map(matchId => getMatchMetadata(matchId)))
+return matchesMetadata
+}
+
+
+app.get('/summoners', async (request: Request, response: Response) => {
+    const summonerDetails = await getSummonerDetails(request)
     if (!summonerDetails) {
         return response.status(404).send({ msg: "Summoner not found." })
     }
 
-    let summonerMatches: Match[] | null
-    summonerMatches = await database.matches.selectByAccountId(summonerDetails.accountId)
+    const summonerMatches = await getSummonerMatches(summonerDetails.accountId)
 
-    if (!summonerMatches.length) {
-        summonerMatches = await leagueApi.getSummonerMatches(summonerDetails.accountId)
-        if (summonerMatches) {
-            await database.matches.insert(summonerDetails.accountId, summonerMatches)
-        }
-    }
-
-    if (!summonerMatches) {
+    if (!summonerMatches || !summonerMatches.length) {
         return response.status(404).send({ msg: "No matches found for summoner." })
     }
+
+
+    const matchesMetadata = await getMatchesMetadata(summonerMatches)
 
     response
         .status(200)
         .send({
             summonerDetails,
-            summonerMatches
+            summonerMatches,
+            matchesMetadata
         })
 })
 
