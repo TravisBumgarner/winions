@@ -1,8 +1,8 @@
 # Resources
 
-## Prisma
+## Postgres & JSONB
 
-- https://www.prisma.io/docs/1.34/get-started/01-setting-up-prisma-new-database-TYPESCRIPT-t002/
+- https://hackernoon.com/how-to-query-jsonb-beginner-sheet-cheat-4da3aa5082a3
 
 ## Docker
 
