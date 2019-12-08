@@ -75,8 +75,8 @@ const bootstrapSummonerMatches = async (accountId: string): Promise<Match[] | nu
     return matches
 }
 
-const getMatchMetadata = async (matchId: number): Promise<MatchMetadata | null> => {
-    const url = `https://na1.api.riotgames.com/lol/match/v4/matches/${matchId}`
+const getMatchMetadata = async (gameId: number): Promise<MatchMetadata | null> => {
+    const url = `https://na1.api.riotgames.com/lol/match/v4/matches/${gameId}`
     const response = await axios({
         method: 'GET',
         url: url,
@@ -98,8 +98,8 @@ const getMatchMetadata = async (matchId: number): Promise<MatchMetadata | null> 
     }
 }
 
-const getMatchTimeline = async (matchId: number): Promise<MatchTimeline | null> => {
-    const url = `https://na1.api.riotgames.com/lol/match/v4/timelines/by-match/${matchId}`
+const getMatchTimeline = async (gameId: number): Promise<MatchTimeline | null> => {
+    const url = `https://na1.api.riotgames.com/lol/match/v4/timelines/by-match/${gameId}`
     const response = await axios({
         method: 'GET',
         url: url,

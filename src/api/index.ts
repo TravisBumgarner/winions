@@ -52,12 +52,12 @@ const getSummonerMatches = async (accountId: string) => {
     return summonerMatches
 }
 
-const getMatchMetadata = async (matchId: number) => {
+const getMatchMetadata = async (gameId: number) => {
     let matchMetadata: MatchMetadata | null
 
-    matchMetadata = await database.matchMetadata.selectByMatchId(matchId)
+    matchMetadata = await database.matchMetadata.selectByGameId(gameId)
     if (!matchMetadata) {
-        matchMetadata = await leagueApi.getMatchMetadata(matchId)
+        matchMetadata = await leagueApi.getMatchMetadata(gameId)
         if (matchMetadata) {
             await database.matchMetadata.insert(matchMetadata)
         }
@@ -65,26 +65,26 @@ const getMatchMetadata = async (matchId: number) => {
     return matchMetadata
 }
 
-const getMatchesMetadata = async (matchIds: number[]) => {
-    const matchesMetadata = Promise.all(matchIds.map(matchId => getMatchMetadata(matchId)))
+const getMatchesMetadata = async (gameIds: number[]) => {
+    const matchesMetadata = Promise.all(gameIds.map(gameId => getMatchMetadata(gameId)))
     return matchesMetadata
 }
 
-const getMatchTimeline = async (matchId: number) => {
+const getMatchTimeline = async (gameId: number) => {
     let matchTimeline: MatchTimeline | null
 
-    matchTimeline = await database.matchTimeline.selectByMatchId(matchId)
+    matchTimeline = await database.matchTimeline.selectByGameId(gameId)
     if (!matchTimeline) {
-        matchTimeline = await leagueApi.getMatchTimeline(matchId)
+        matchTimeline = await leagueApi.getMatchTimeline(gameId)
         if (matchTimeline) {
-            await database.matchTimeline.insert(matchId, matchTimeline)
+            await database.matchTimeline.insert(gameId, matchTimeline)
         }
     }
     return matchTimeline
 }
 
-const getMatchesTimeline = async (matchIds: number[]) => {
-    const matchesTimeline = Promise.all(matchIds.map(matchId => getMatchTimeline(matchId)))
+const getMatchesTimeline = async (gameIds: number[]) => {
+    const matchesTimeline = Promise.all(gameIds.map(gameId => getMatchTimeline(gameId)))
     return matchesTimeline
 }
 
@@ -101,9 +101,9 @@ app.get('/summoners', async (request: Request, response: Response) => {
         return response.status(404).send({ msg: "No matches found for summoner." })
     }
 
-    const matchIds = summonerMatches.map(({ gameId }) => gameId)
-    const matchesMetadata = await getMatchesMetadata(matchIds)
-    const matchesTimeline = await getMatchesTimeline(matchIds)
+    const gameIds = summonerMatches.map(({ gameId }) => gameId)
+    const matchesMetadata = await getMatchesMetadata(gameIds)
+    const matchesTimeline = await getMatchesTimeline(gameIds)
 
     response
         .status(200)

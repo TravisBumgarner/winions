@@ -57,12 +57,12 @@ const insert = async (gameId: number, matchTimeline: MatchTimeline) => {
         })
 }
 
-const selectByMatchId = async (matchId: number): Promise<MatchTimeline | null> => {
+const selectByGameId = async (gameId: number): Promise<MatchTimeline | null> => {
     const response = await knex('matchTimeline')
         .select<MatchTimeline[]>()
-        .where('gameId', matchId) // Yay inconsistancy
+        .where('gameId', gameId)
 
     return response.length === 1 ? response[0] : null
 }
 
-export { insert, selectByMatchId }
+export { insert, selectByGameId }

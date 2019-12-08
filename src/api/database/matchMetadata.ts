@@ -3,7 +3,7 @@ import knex from '.'
 import { MatchMetadata } from '../../shared-types'
 
 const insertParticipantIdentities = async (gameId: number, participantsIdentities: MatchMetadata['participantIdentities']) => {
-const participansIdentitiesMod = participantsIdentities.map(({ participantId, player }) => {
+    const participansIdentitiesMod = participantsIdentities.map(({ participantId, player }) => {
 
         const {
             currentPlatformId,
@@ -30,7 +30,7 @@ const participansIdentitiesMod = participantsIdentities.map(({ participantId, pl
         }
     })
 
-const response = await knex('participantIdentities').insert(participansIdentitiesMod)
+    const response = await knex('participantIdentities').insert(participansIdentitiesMod)
     return
 }
 
@@ -72,12 +72,12 @@ const insert = async (matchMetadata: MatchMetadata) => {
         })
 }
 
-const selectByMatchId = async (matchId: number): Promise<MatchMetadata | null> => {
+const selectByGameId = async (gameId: number): Promise<MatchMetadata | null> => {
     const response = await knex('matchMetadata')
         .select<MatchMetadata[]>()
-        .where('gameId', matchId) // Yay inconsistancy
+        .where('gameId', gameId)
 
     return response.length === 1 ? response[0] : null
 }
 
-export { insert, selectByMatchId }
+export { insert, selectByGameId }
