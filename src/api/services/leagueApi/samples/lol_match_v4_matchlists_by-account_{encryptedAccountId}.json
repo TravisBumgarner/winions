@@ -1,0 +1,18 @@
+{
+    "Expect-CT": "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\"",
+    "Access-Control-Allow-Headers": "Content-Type,Authorization,Region,Cookie",
+    "Content-Encoding": "gzip",
+    "X-Method-Rate-Limit-Count": "1:10",
+    "CF-Cache-Status": "DYNAMIC",
+    "X-Riot-Edge-Trace-Id": "962348c9-d453-4de4-a130-cd015e0ad5ba",
+    "X-App-Rate-Limit": "20:1,100:120",
+    "X-Method-Rate-Limit": "1000:10",
+    "transfer-encoding": "chunked",
+    "Connection": "keep-alive",
+    "X-App-Rate-Limit-Count": "1:1,2:120",
+    "Access-Control-Allow-Credentials": "true",
+    "Date": "Sun, 08 Dec 2019 19:14:39 GMT",
+    "CF-RAY": "542110438ae893ac-SJC",
+    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+    "Content-Type": "application/json;charset=utf-8"
+}
