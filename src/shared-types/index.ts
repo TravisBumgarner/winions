@@ -25,28 +25,30 @@ type MatchMetadata = {
     seasonId: number,
     queueId: number,
     gameId: number,
-    participantIdentities: {
-        player: {
-            currentPlatformId: string,
-            summonerName: string,
-            matchHistoryUri: string,
-            platformId: string,
-            currentAccountId: string,
-            profileIcon: number,
-            summonerId: string,
-            accountId: string
-        }
-        participantId: number
-    }[]
+    participantIdentities: string,
+    //TODO How to retain this type checking?
+    // participantIdentities: {
+    //     player: {
+    //         currentPlatformId: string,
+    //         summonerName: string,
+    //         matchHistoryUri: string,
+    //         platformId: string,
+    //         currentAccountId: string,
+    //         profileIcon: number,
+    //         summonerId: string,
+    //         accountId: string
+    //     }
+    //     participantId: number
+    // }[]
     gameVersion: string
     platformId: string
     gameMode: string
     mapId: number
     gameType: string
-    teams: any[] // This can be expanded upon later.
-    participants: any[] // This can be expanded upon later.
+    // teams: any[] // This can be used later.
+    // participants: any[] // This can be used later.
     gameDuration: number
-    gameCreation: number
+    gameCreation: Date
 }
 
 type ParticipantFrames = {

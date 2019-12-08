@@ -78,8 +78,34 @@ const bootstrapSummonerMatches = async (accountId: string): Promise<Match[] | nu
 
 const getMatchMetadata = async (gameId: number): Promise<MatchMetadata | null> => {
     const url = `https://na1.api.riotgames.com/lol/match/v4/matches/${gameId}`
-    const matchData = await makeLeagueRequest(url, 'getMatchData')
-    return matchData
+    const matchMetadata = await makeLeagueRequest(url, 'getMatchMetadata')
+
+    const {
+        seasonId,
+        queueId,
+        gameVersion,
+        platformId,
+        gameMode,
+        mapId,
+        gameType,
+        gameDuration,
+        gameCreation,
+        participantIdentities
+    } = matchMetadata
+
+    return {
+        gameId,
+        seasonId,
+        queueId,
+        gameVersion,
+        platformId,
+        gameMode,
+        mapId,
+        gameType,
+        gameDuration,
+        gameCreation: new Date(gameCreation),
+        participantIdentities: JSON.stringify(participantIdentities)
+    }
 }
 
 const getMatchTimeline = async (gameId: number): Promise<MatchTimeline | null> => {
