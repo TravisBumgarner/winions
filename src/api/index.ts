@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 
 import { leagueApi } from './services'
 import * as database from './database'
-import { Summoner, Match, MatchMetadata } from '../shared-types'
+import { Summoner, Match, MatchMetadata, MatchTimeline } from '../shared-types'
 
 const app = express()
 
@@ -65,10 +65,27 @@ const getMatchMetadata = async (matchId: number) => {
     return matchMetadata
 }
 
-const getMatchesMetadata = async (matches: Match[]) => {
-    const matchIds = matches.map(({ gameId }) => gameId)
+const getMatchesMetadata = async (matchIds: number[]) => {
     const matchesMetadata = Promise.all(matchIds.map(matchId => getMatchMetadata(matchId)))
-return matchesMetadata
+    return matchesMetadata
+}
+
+const getMatchTimeline = async (matchId: number) => {
+    let matchTimeline: MatchTimeline | null
+
+    matchTimeline = await database.matchTimeline.selectByMatchId(matchId)
+    if (!matchTimeline) {
+        matchTimeline = await leagueApi.getMatchTimeline(matchId)
+        if (matchTimeline) {
+            await database.matchTimeline.insert(matchId, matchTimeline)
+        }
+    }
+    return matchTimeline
+}
+
+const getMatchesTimeline = async (matchIds: number[]) => {
+    const matchesTimeline = Promise.all(matchIds.map(matchId => getMatchTimeline(matchId)))
+    return matchesTimeline
 }
 
 
@@ -84,15 +101,17 @@ app.get('/summoners', async (request: Request, response: Response) => {
         return response.status(404).send({ msg: "No matches found for summoner." })
     }
 
-
-    const matchesMetadata = await getMatchesMetadata(summonerMatches)
+    const matchIds = summonerMatches.map(({ gameId }) => gameId)
+    const matchesMetadata = await getMatchesMetadata(matchIds)
+    const matchesTimeline = await getMatchesTimeline(matchIds)
 
     response
         .status(200)
         .send({
             summonerDetails,
             summonerMatches,
-            matchesMetadata
+            matchesMetadata,
+            matchesTimeline
         })
 })
 

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import * as config from '../../../../config'
-import { Summoner, Match, MatchMetadata } from '../../../shared-types'
+import { Summoner, Match, MatchMetadata, MatchTimeline } from '../../../shared-types'
 
 const getSummonerDetails = async (summonerName): Promise<Summoner | null> => {
     const url = `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${encodeURIComponent(summonerName)}`
@@ -98,4 +98,27 @@ const getMatchMetadata = async (matchId: number): Promise<MatchMetadata | null> 
     }
 }
 
-export { getSummonerDetails, getSummonerMatches, bootstrapSummonerMatches, getMatchMetadata }
+const getMatchTimeline = async (matchId: number): Promise<MatchTimeline | null> => {
+    const url = `https://na1.api.riotgames.com/lol/match/v4/timelines/by-match/${matchId}`
+    const response = await axios({
+        method: 'GET',
+        url: url,
+        headers: {
+            "X-Riot-Token": config.LEAGUE_API_KEY,
+        },
+        params: {
+        }
+    })
+
+    if (response.status === 200) {
+        return response.data
+    }
+    if (response.status === 404 || response.status === 429) {
+        console.log('Rate Limit exceeded or 404 with getMatchTimeline')
+        return null
+    } else {
+        throw new Error('Failed to call getMatchTimeline')
+    }
+}
+
+export { getSummonerDetails, getSummonerMatches, bootstrapSummonerMatches, getMatchMetadata, getMatchTimeline }
