@@ -97,7 +97,6 @@ const getMatchMetadata = async (gameId: number, accountId: string): Promise<Matc
     } = matchMetadata
 
     const { participantId } = participantIdentities.find(({ player }) => player.accountId === accountId)
-    console.log(participantId)
 
     return {
         gameId,
@@ -126,7 +125,6 @@ const getMatchTimeline = async (gameId: number, participantId: number): Promise<
     const millisecondsToMinutes = (ms) => Math.round(ms / 60000)
 
     const matchTimelineMod = matchTimeline.frames.map(({ timestamp, participantFrames, events }) => {
-        console.log(timestamp)
         return {
             timestamp: new Date(timestamp),
             minute: millisecondsToMinutes(timestamp),
