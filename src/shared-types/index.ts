@@ -54,6 +54,7 @@ type MatchMetadata = {
 type MatchTimeline = {
     frameInterval: number
     frames: {
+        minute: number
         timestamp: number
         participantFrames: string
     }[]

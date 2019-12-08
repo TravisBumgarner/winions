@@ -4,6 +4,7 @@ export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable('matchTimeline', table => {
         table.bigInteger('gameId')
         table.timestamp('timestamp')
+        table.integer('minute')
         table.jsonb('participantFrames')
         table.jsonb('events')
     })

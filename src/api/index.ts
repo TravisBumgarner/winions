@@ -111,7 +111,6 @@ app.get('/summoners', async (request: Request, response: Response) => {
     matchesMetadata = matchesMetadata.filter(a => a)
 
     const gameAndParticipantIds = matchesMetadata.map(({ participantId, gameId }) => ({ participantId, gameId }))
-
     const matchesTimeline = await getMatchesTimeline(gameAndParticipantIds)
 
     response
