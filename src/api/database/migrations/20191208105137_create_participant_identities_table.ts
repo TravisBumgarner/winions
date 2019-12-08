@@ -4,7 +4,7 @@ export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable('participantIdentities', table => {
         table.bigInteger('gameId')
         table.string('currentPlatformId')
-        table.string('summerName')
+        table.string('summonerName')
         table.string('matchHistoryUri')
         table.string('platformId')
         table.string('currentAccountId')
