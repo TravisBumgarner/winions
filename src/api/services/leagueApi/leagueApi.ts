@@ -97,7 +97,7 @@ const getMatchMetadata = async (gameId: number, accountId: string): Promise<Matc
     } = matchMetadata
 
     const { participantId } = participantIdentities.find(({ player }) => { player.accountId === accountId })
-    
+
     return {
         gameId,
         seasonId,
@@ -114,15 +114,18 @@ const getMatchMetadata = async (gameId: number, accountId: string): Promise<Matc
     }
 }
 
-const getMatchTimeline = async (gameId: number): Promise<MatchTimeline | null> => {
+const getMatchTimeline = async (gameId: number, participantId: number): Promise<MatchTimeline | null> => {
     const url = `https://na1.api.riotgames.com/lol/match/v4/timelines/by-match/${gameId}`
     const matchTimeline = await makeLeagueRequest(url, 'getMatchTimeline')
+
+    const getParticipantFrameMod = (participantFrames) => {
+        return Object.values(participantFrames).find((participantFrame: any) => participantFrame.participantId === participantId)
+    }
 
     const matchTimelineMod = matchTimeline.frames.map(({ timestamp, participantFrames, events }) => {
         return {
             timestamp: new Date(timestamp),
-            participantFrames: JSON.stringify(participantFrames),
-            events: JSON.stringify(events),
+            participantFrames: JSON.stringify(getParticipantFrameMod(participantFrames)),
             gameId
         }
     })

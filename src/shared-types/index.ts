@@ -55,7 +55,6 @@ type MatchTimeline = {
     frameInterval: number
     frames: {
         timestamp: number
-        events: string
         participantFrames: string
     }[]
 }
