@@ -8,7 +8,8 @@
         "start-api-dev": "NODE_ENV=development nodemon src/api/index.ts",
         "bundle-ui": "rm ./dist/index.html; rm ./dist/app*; mkdir ./dist; NODE_ENV=production; webpack --mode=production --config webpack.js --verobose",
         "knex-migrate-make": "knex migrate:make --knexfile ./knexfile.ts",
-        "knex-migrate-latest": "knex migrate:latest --knexfile ./knexfile.ts"
+        "knex-migrate-latest": "knex migrate:latest --knexfile ./knexfile.ts",
+        "typecheck": "tsc --noEmit"
     },
     "keywords": [],
     "author": "",

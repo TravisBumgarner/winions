@@ -26,7 +26,8 @@ type MatchMetadata = {
     queueId: number,
     gameId: number,
     participantIdentities: string,
-    //TODO How to retain this type checking?
+    events: string,
+    //TODO How to retain this type checking? and also for events. 
     // participantIdentities: {
     //     player: {
     //         currentPlatformId: string,

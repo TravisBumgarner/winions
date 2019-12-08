@@ -103,7 +103,7 @@ app.get('/summoners', async (request: Request, response: Response) => {
 
     const gameIds = summonerMatches.map(({ gameId }) => gameId)
     const matchesMetadata = await getMatchesMetadata(gameIds)
-    // const matchesTimeline = await getMatchesTimeline(gameIds)
+    const matchesTimeline = await getMatchesTimeline(gameIds)
 
     response
         .status(200)
@@ -111,7 +111,7 @@ app.get('/summoners', async (request: Request, response: Response) => {
             summonerDetails,
             summonerMatches,
             matchesMetadata,
-            // matchesTimeline
+            matchesTimeline
         })
 })
 

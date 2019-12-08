@@ -111,7 +111,17 @@ const getMatchMetadata = async (gameId: number): Promise<MatchMetadata | null> =
 const getMatchTimeline = async (gameId: number): Promise<MatchTimeline | null> => {
     const url = `https://na1.api.riotgames.com/lol/match/v4/timelines/by-match/${gameId}`
     const matchTimeline = await makeLeagueRequest(url, 'getMatchTimeline')
-    return matchTimeline
+
+    const matchTimelineMod = matchTimeline.frames.map(({ timestamp, participantFrames, events }) => {
+        return {
+            timestamp: new Date(timestamp),
+            participantFrames: JSON.stringify(participantFrames),
+            events: JSON.stringify(events),
+            gameId
+        }
+    })
+
+    return matchTimelineMod
 }
 
 export { getSummonerDetails, getSummonerMatches, bootstrapSummonerMatches, getMatchMetadata, getMatchTimeline }
