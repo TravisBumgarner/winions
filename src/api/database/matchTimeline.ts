@@ -1,7 +1,7 @@
 import knex from '.'
 import { uuid } from 'uuidv4';
 
-import { MatchTimeline, ParticipantFrames } from '../../shared-types'
+import { MatchTimeline } from '../../shared-types'
 
 // const insertParticipantFrames = async (participantFramesId: string, participantFrames: ParticipantFrames) => {
 //     const participantFramesMod = Object.values(participantFrames).map(participantFrame => {

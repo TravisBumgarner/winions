@@ -26,7 +26,6 @@ type MatchMetadata = {
     queueId: number,
     gameId: number,
     participantIdentities: string,
-    events: string,
     //TODO How to retain this type checking? and also for events. 
     // participantIdentities: {
     //     player: {
@@ -52,28 +51,28 @@ type MatchMetadata = {
     gameCreation: Date
 }
 
-type ParticipantFrames = {
-    [key: string]: {
-        totalGold: number
-        teamScore: number
-        participantId: number
-        level: number
-        currentGold: number
-        minionsKilled: number
-        dominionScore: number
-        // position: any  // This can be used later.
-        xp: number
-        jungleMinionsKilled: number
-    }
-}
+// type ParticipantFrames = {
+//     [key: string]: {
+//         totalGold: number
+//         teamScore: number
+//         participantId: number
+//         level: number
+//         currentGold: number
+//         minionsKilled: number
+//         dominionScore: number
+//         // position: any  // This can be used later.
+//         xp: number
+//         jungleMinionsKilled: number
+//     }
+// }
 
 type MatchTimeline = {
     frameInterval: number
     frames: {
         timestamp: number
-        events: any[]  // This can be expanded upon later.
-        participantFrames: ParticipantFrames
+        events: string
+        participantFrames: string
     }[]
 }
 
-export { Summoner, Match, MatchMetadata, MatchTimeline, ParticipantFrames }
+export { Summoner, Match, MatchMetadata, MatchTimeline }
