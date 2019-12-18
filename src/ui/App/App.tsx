@@ -1,19 +1,16 @@
 import React from 'react'
 import axios from 'axios'
 
-import { Summoner, MatchTimeline } from '../../shared-types'
+import { Summoner, MatchTimeline, Match, MatchMetadata } from '../../shared-types'
 
 const App = () => {
     const [summoner, setSummoner] = React.useState<string>("finx the minx");
     const [summonerDetails, setSummonerDetails] = React.useState<Summoner | null>(null)
-    const [summonerMatches, setSummonerMatches] = React.useState<Summoner | null>(null)
-    const [matchesMetadata, setMatchesMetadata] = React.useState<Summoner | null>(null)
-    const [matchesTimeline, setMatchesTimeline] = React.useState<MatchTimeline[]>([])
+    const [summonerMatches, setSummonerMatches] = React.useState<Match[] | null>(null)
+    const [matchesMetadata, setMatchesMetadata] = React.useState<MatchMetadata[] | null>(null)
+    const [matchesTimeline, setMatchesTimeline] = React.useState<MatchTimeline[] | null>([])
     const [hasErrored, setHasErrored] = React.useState<boolean>(false)
     const [hasSearched, setHasSearched] = React.useState<boolean>(false)
-
-    React.useEffect(() => {
-    })
 
     const handleSubmit = (event) => {
         setHasErrored(false)
@@ -43,20 +40,20 @@ const App = () => {
         </form>
     )
 
-    const MatchesMinionsKilled = matchesTimeline.map(match => {
-        const matchMinionsKilled = match.map(({ minute, participantFrames: participantFramesJson }) => {
-            const { minionsKilled } = JSON.parse(participantFramesJson)
-            return <li>{minute} - {minionsKilled}</li>
-        })
-        return <ul>{matchMinionsKilled}</ul>
-    })
-
     let SearchResults
     if (hasErrored) {
         SearchResults = <h3>Whoops.</h3>
     } else if (!hasSearched) {
         SearchResults = <h3>Search Something.</h3>
-    } else if (hasSearched && summonerDetails) {
+    } else if (hasSearched && summonerDetails && matchesTimeline) {
+        const MatchesMinionsKilled = matchesTimeline.map(match => {
+            const matchMinionsKilled = match.map(({ minute, participantFrames: participantFramesJson }) => {
+                const { minionsKilled } = JSON.parse(participantFramesJson)
+                return <li>{minute} - {minionsKilled}</li>
+            })
+            return <ul>{matchMinionsKilled}</ul>
+        })
+
         SearchResults = (
             <div>
                 <h3>{summonerDetails.name} - {summonerDetails.id}</h3>
