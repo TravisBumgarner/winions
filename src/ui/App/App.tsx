@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line } from 'recharts'
 
 import { Summoner, MatchTimeline, Match, MatchMetadata } from '../../shared-types'
 
@@ -40,34 +41,45 @@ const App = () => {
         </form>
     )
 
-    let SearchResults
-    if (hasErrored) {
-        SearchResults = <h3>Whoops.</h3>
-    } else if (!hasSearched) {
-        SearchResults = <h3>Search Something.</h3>
-    } else if (hasSearched && summonerDetails && matchesTimeline) {
-        const MatchesMinionsKilled = matchesTimeline.map(match => {
-            const matchMinionsKilled = match.map(({ minute, participantFrames: participantFramesJson }) => {
-                const { minionsKilled } = JSON.parse(participantFramesJson)
-                return <li>{minute} - {minionsKilled}</li>
-            })
-            return <ul>{matchMinionsKilled}</ul>
-        })
-
-        SearchResults = (
-            <div>
-                <h3>{summonerDetails.name} - {summonerDetails.id}</h3>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>{MatchesMinionsKilled}</div>
-            </div>)
-    } else if (hasSearched && !summonerDetails) {
-        SearchResults = <h3>No user found.</h3>
+    const LEGEND = {
+        minionsKilled: "Minions Killed"
     }
+
+    const matchDataByMinute = {}
+    const lines: string[] = []
+
+    matchesTimeline.forEach((match, index) => {
+        const matchMetadata = matchesMetadata.find(({ gameId }) => gameId === match[0].gameId)
+        lines.push(`${matchMetadata.gameCreation}`)
+        const matchMinionsKilled = match
+            .filter(({ minute }) => minute % 5 === 0)
+            .forEach(({ minute, participantFrames: participantFramesJson }) => {
+                if (!(minute in matchDataByMinute)) {
+                    matchDataByMinute[minute] = { name: minute }
+                }
+
+                const { minionsKilled } = JSON.parse(participantFramesJson)
+                matchDataByMinute[minute][matchMetadata.gameCreation] = minionsKilled
+            })
+        return matchMinionsKilled
+    })
+
+    const Lines = lines.map(line => <Line type="monotone" dataKey={line} stroke="#8884d8" />)
 
     return (
         <React.Fragment>
             <div>
                 {FormInput}
-                {SearchResults}
+                <LineChart width={730} height={250} data={Object.values(matchDataByMinute)}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    {Lines}
+                    <Tooltip />
+                    <Legend />
+
+                </LineChart>
             </div >
         </React.Fragment>
 

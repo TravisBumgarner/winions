@@ -15,7 +15,7 @@ const selectByGameId = async (gameId: number): Promise<MatchTimeline | null> => 
     const response = await knex('matchTimeline')
         .select<MatchTimeline[]>()
         .where('gameId', gameId)
-
+    console.log(response)
     return response.length === 1 ? response[0] : null
 }
 
