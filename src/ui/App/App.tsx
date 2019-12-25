@@ -1,12 +1,13 @@
 import React from 'react'
 
 import Context from './Context'
-import { SearchBar } from './components'
+import { SearchBar, Charts } from './components'
 
 const App = () => {
     return (
         <Context>
             <SearchBar />
+            <Charts />
         </Context>
 
     )

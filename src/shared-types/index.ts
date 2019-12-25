@@ -56,7 +56,7 @@ type Timeline = {
     timestamp: Date
     participantFrames: string
     gameId: number
-}[]
+}
 
 export {
     Summoner,
