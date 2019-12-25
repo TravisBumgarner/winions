@@ -41,7 +41,7 @@ const getSummonerDetails = async (summonerName): Promise<Summoner | null> => {
     return summonerDetails
 }
 
-const getSummonerMatches = async (accountId: string, beginIndex: number = 0, endIndex: number): Promise<Match[] | null> => {
+const getMatches = async (accountId: string, beginIndex: number = 0, endIndex: number): Promise<Match[] | null> => {
     const url = `https://na1.api.riotgames.com/lol/match/v4/matchlists/by-account/${accountId}`
     const params = {
         beginIndex,
@@ -61,13 +61,13 @@ const getSummonerMatches = async (accountId: string, beginIndex: number = 0, end
     }
 }
 
-const bootstrapSummonerMatches = async (accountId: string): Promise<Match[] | null> => {
+const bootstrapMatches = async (accountId: string): Promise<Match[] | null> => {
     let beginIndex = 0
     let endIndex = 3 // This can in increased later. For now get it working with this number
     const matches: Match[] = []
 
     while (beginIndex < 20) { // This can in increased later. For now get it working with 100.
-        const matchSubset = await getSummonerMatches(accountId, beginIndex, endIndex)
+        const matchSubset = await getMatches(accountId, beginIndex, endIndex)
 
         if (matchSubset && matchSubset.length) {
             matches.push(...matchSubset)
@@ -79,7 +79,7 @@ const bootstrapSummonerMatches = async (accountId: string): Promise<Match[] | nu
     return matches
 }
 
-const getMatchMetadata = async (gameId: number, accountId: string): Promise<MatchMetadata | null> => {
+const getMetadata = async (gameId: number, accountId: string): Promise<MatchMetadata | null> => {
     const url = `https://na1.api.riotgames.com/lol/match/v4/matches/${gameId}`
     const matchMetadata = await makeLeagueRequest(url, 'getMatchMetadata')
 
@@ -114,7 +114,7 @@ const getMatchMetadata = async (gameId: number, accountId: string): Promise<Matc
     }
 }
 
-const getMatchTimeline = async (gameId: number, participantId: number): Promise<MatchTimeline | null> => {
+const getTimeline = async (gameId: number, participantId: number): Promise<MatchTimeline | null> => {
     const url = `https://na1.api.riotgames.com/lol/match/v4/timelines/by-match/${gameId}`
     const matchTimeline = await makeLeagueRequest(url, 'getMatchTimeline')
 
@@ -136,4 +136,4 @@ const getMatchTimeline = async (gameId: number, participantId: number): Promise<
     return matchTimelineMod
 }
 
-export { getSummonerDetails, getSummonerMatches, bootstrapSummonerMatches, getMatchMetadata, getMatchTimeline }
+export { getSummonerDetails, getMatches, bootstrapMatches, getMetadata, getTimeline }

@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 
 import { leagueApi } from './services'
 import * as database from './database'
-import { Summoner, Match, MatchMetadata, MatchTimeline } from '../shared-types'
+import { Summoner, Match, MatchMetadata as Metadata, MatchTimeline as Timeline } from '../shared-types'
 
 const app = express()
 
@@ -44,7 +44,7 @@ const getSummonerMatches = async (accountId: string) => {
 
     summonerMatches = await database.matches.selectByAccountId(accountId)
     if (!summonerMatches.length) {
-        summonerMatches = await leagueApi.bootstrapSummonerMatches(accountId)
+        summonerMatches = await leagueApi.bootstrapMatches(accountId)
         if (summonerMatches) {
             await database.matches.insert(accountId, summonerMatches)
         }
@@ -52,45 +52,45 @@ const getSummonerMatches = async (accountId: string) => {
     return summonerMatches
 }
 
-const getMatchMetadata = async (gameId: number, accountId: string) => {
-    let matchMetadata: MatchMetadata | null
+const getMetadata = async (gameId: number, accountId: string) => {
+    let metadata: Metadata | null
 
-    matchMetadata = await database.matchMetadata.selectByGameId(gameId)
-    if (!matchMetadata) {
-        matchMetadata = await leagueApi.getMatchMetadata(gameId, accountId)
-        if (matchMetadata) {
-            await database.matchMetadata.insert(matchMetadata)
+    metadata = await database.metadata.selectByGameId(gameId)
+    if (!metadata) {
+        metadata = await leagueApi.getMetadata(gameId, accountId)
+        if (metadata) {
+            await database.metadata.insert(metadata)
         }
     }
-    return matchMetadata
+    return metadata
 }
 
-const getMatchesMetadata = async (gameIds: number[], accountId: string) => {
-    const matchesMetadata = await Promise.all(gameIds.map(gameId => getMatchMetadata(gameId, accountId)))
+const getMetadataBatch = async (gameIds: number[], accountId: string) => {
+    const metadata = await Promise.all(gameIds.map(gameId => getMetadata(gameId, accountId)))
 
     // Typescript won't let you filter to do type refinement on the return from getMatchMetadata
-    const matchesMetadataMod: MatchMetadata[] = []
-    matchesMetadata.forEach(matchMetadata => matchMetadata && matchesMetadataMod.push(matchMetadata))
+    const metadataMod: Metadata[] = []
+    metadata.forEach(matchMetadata => matchMetadata && metadataMod.push(matchMetadata))
 
-    return matchesMetadataMod
+    return metadataMod
 }
 
-const getMatchTimeline = async (gameId: number, participantId: number) => {
-    let matchTimeline: MatchTimeline | null
+const getTimeline = async (gameId: number, participantId: number) => {
+    let timeline: Timeline | null
 
-    matchTimeline = await database.matchTimeline.selectByGameId(gameId)
-    if (!matchTimeline) {
-        matchTimeline = await leagueApi.getMatchTimeline(gameId, participantId)
-        if (matchTimeline) {
-            await database.matchTimeline.insert(gameId, matchTimeline)
+    timeline = await database.timeline.selectByGameId(gameId)
+    if (!timeline) {
+        timeline = await leagueApi.getTimeline(gameId, participantId)
+        if (timeline) {
+            await database.timeline.insert(gameId, timeline)
         }
     }
-    return matchTimeline
+    return timeline
 }
 
-const getMatchesTimeline = async (gameAndParticipantIds: { gameId: number, participantId: number }[]) => {
-    const matchesTimeline = Promise.all((gameAndParticipantIds).map(({ gameId, participantId }) => getMatchTimeline(gameId, participantId)))
-    return matchesTimeline
+const getTimelines = async (gameAndParticipantIds: { gameId: number, participantId: number }[]) => {
+    const timeline = Promise.all((gameAndParticipantIds).map(({ gameId, participantId }) => getTimeline(gameId, participantId)))
+    return timeline
 }
 
 
@@ -107,11 +107,11 @@ app.get('/summoners', async (request: Request, response: Response) => {
     }
 
     const gameIds = summonerMatches.map(({ gameId }) => gameId)
-    let matchesMetadata = await getMatchesMetadata(gameIds, summonerDetails.accountId)
+    let matchesMetadata = await getMetadataBatch(gameIds, summonerDetails.accountId)
     matchesMetadata = matchesMetadata.filter(a => a)
 
     const gameAndParticipantIds = matchesMetadata.map(({ participantId, gameId }) => ({ participantId, gameId }))
-    const matchesTimeline = await getMatchesTimeline(gameAndParticipantIds)
+    const matchesTimeline = await getTimelines(gameAndParticipantIds)
 
     response
         .status(200)
