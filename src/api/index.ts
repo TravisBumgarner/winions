@@ -117,9 +117,9 @@ app.get('/summoners', async (request: Request, response: Response) => {
         .status(200)
         .send({
             summonerDetails,
-            summonerMatches,
-            matchesMetadata,
-            matchesTimeline
+            matches: summonerMatches,
+            metadata: matchesMetadata,
+            timelines: matchesTimeline
         })
 })
 

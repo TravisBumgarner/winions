@@ -1,38 +1,66 @@
 import * as React from 'react'
 
+import { Summoner, Match, Metadata, Timeline } from '../../shared-types'
+
 type State = {
     hasErrored: boolean
     hasSearched: boolean
     isSearching: boolean
     searchTerm: string
+    summoner: string
+    summonerDetails: Summoner | null
+    matches: Match[] | null
+    metadata: Metadata[] | null
+    timelines: Timeline[] | null
 }
 
 const EMPTY_STATE: State = {
     hasErrored: false,
     hasSearched: false,
     isSearching: false,
-    searchTerm: 'finx the minx'
+    searchTerm: 'finx the minx',
+    summoner: '',
+    summonerDetails: null,
+    matches: null,
+    metadata: null,
+    timelines: null
 }
 
 const context = React.createContext({ state: EMPTY_STATE, dispatch: () => { } } as { state: State, dispatch: React.Dispatch<Action> })
 
+type EndSearchAction = {
+    type: 'END_SEARCH'
+    data: {
+        summonerDetails: Summoner | null
+        matches: Match[] | null
+        metadata: Metadata[] | null
+        timelines: Timeline[] | null
+    }
+}
 type ErroredAction = { type: 'ERRORED' }
-type NewSearchTerm = { type: 'NEW_SEARCH_TERM', searchTerm: string }
-type NewSearchAction = { type: 'NEW_SEARCH' }
+type NewSearchTermAction = { type: 'NEW_SEARCH_TERM', searchTerm: string }
+type StartSearchAction = { type: 'START_SEARCH' }
 
-type Action = ErroredAction | NewSearchAction | NewSearchTerm
+type Action =
+    EndSearchAction |
+    ErroredAction |
+    NewSearchTermAction |
+    StartSearchAction
 
 const reducer = (state: State, action: Action): State => {
     switch (action.type) {
-        case 'NEW_SEARCH': {
-            return { ...state, isSearching: true }
+        case 'END_SEARCH': {
+            const { summonerDetails, matches, metadata, timelines } = action.data
+            return { ...state, isSearching: false, summonerDetails, matches, metadata, timelines }
         }
         case 'ERRORED': {
             return { ...state, hasErrored: true, isSearching: false }
         }
         case 'NEW_SEARCH_TERM': {
-            console.log('new searrch term')
             return { ...state, searchTerm: action.searchTerm }
+        }
+        case 'START_SEARCH': {
+            return { ...state, hasErrored: false, isSearching: true, searchTerm: '', summoner: state.searchTerm }
         }
     }
 }
@@ -50,4 +78,4 @@ const ResultsContext = ({ children }) => {
 }
 
 export default ResultsContext
-export { context }
+export { context, Action }

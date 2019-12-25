@@ -21,7 +21,7 @@ type Match = {
     accountId: string
 }
 
-type MatchMetadata = {
+type Metadata = {
     seasonId: number,
     queueId: number,
     gameId: number,
@@ -51,7 +51,7 @@ type MatchMetadata = {
 //     }
 // }
 
-type MatchTimeline = {
+type Timeline = {
     frameInterval: number
     frames: {
         minute: number
@@ -60,4 +60,11 @@ type MatchTimeline = {
     }[]
 }
 
-export { Summoner, Match, MatchMetadata, MatchTimeline }
+export {
+    Summoner,
+    Match,
+    Metadata,
+    Timeline,
+    Timeline as MatchTimeline,
+    Metadata as MatchMetadata
+}
