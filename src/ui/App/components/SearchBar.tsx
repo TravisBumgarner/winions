@@ -6,7 +6,7 @@ import { context, Action } from '../Context'
 const handleSubmit = (summoner: string, dispatch: React.Dispatch<Action>) => {
     dispatch({ type: 'START_SEARCH' })
     axios.get(`http://localhost:5000/summoners?summoner_name=${encodeURIComponent(summoner)}`)
-        .then(({data}) => { dispatch({ type: 'END_SEARCH', data }) })
+        .then(({ data }) => { dispatch({ type: 'END_SEARCH', data }) })
         .catch(_error => dispatch({ type: 'ERRORED' }))
 }
 
