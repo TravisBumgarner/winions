@@ -1,7 +1,9 @@
 import * as React from 'react'
 import axios from 'axios'
+import styled from 'styled-components'
 
 import { context, Action } from '../Context'
+import { COLOR } from '../Theme'
 
 const handleSubmit = (summoner: string, dispatch: React.Dispatch<Action>) => {
     dispatch({ type: 'START_SEARCH' })
@@ -10,8 +12,22 @@ const handleSubmit = (summoner: string, dispatch: React.Dispatch<Action>) => {
         .catch(_error => dispatch({ type: 'ERRORED' }))
 }
 
-type Props = {
-}
+const SearchInput = styled.input`
+    background-color: ${COLOR.TERTIARY};
+    border: 0;
+    padding: 10px;
+    font-size: 1em;
+    width: 300px;
+`
+
+const SearchButton = styled.button`
+    background-color: ${COLOR.TERTIARY};
+    border: 0;
+    padding: 10px;
+    font-size: 1em;
+    width: 200px;
+    margin-left: 10px;
+`
 
 const SearchBar = () => {
     const { state, dispatch } = React.useContext(context)
@@ -19,7 +35,7 @@ const SearchBar = () => {
     return (
         <div>
             <label>Summoner Name:</label>
-            <input
+            <SearchInput
                 type="text"
                 name="search"
                 value={state.searchTerm}
@@ -29,7 +45,7 @@ const SearchBar = () => {
                     }
                 }
             />
-            <button onClick={() => handleSubmit(state.searchTerm, dispatch)}>Search</button>
+            <SearchButton onClick={() => handleSubmit(state.searchTerm, dispatch)}>FTW</SearchButton>
         </div >
     )
 }

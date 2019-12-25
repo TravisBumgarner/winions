@@ -1,14 +1,23 @@
 import React from 'react'
+import styled from 'styled-components'
 
 import Context from './Context'
-import { SearchBar, Charts } from './components'
+import { SearchBar, Charts, Header } from './components'
+import { GlobalStyle } from './Theme'
+
+const AppWrapper = styled.div``
 
 const App = () => {
     return (
-        <Context>
-            <SearchBar />
-            <Charts />
-        </Context>
+        <AppWrapper>
+            <GlobalStyle />
+            <Context>
+                <Header />
+                <SearchBar />
+                <Charts />
+            </Context>
+        </AppWrapper>
+
 
     )
 }
