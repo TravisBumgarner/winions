@@ -1,5 +1,7 @@
-import ResultsContext from './ResultsContext'
+import * as Reducer from './Reducer'
+import SearchBar from './SearchBar'
 
 export {
-    ResultsContext
+    Reducer,
+    SearchBar
 }
