@@ -1,7 +1,7 @@
-import * as Reducer from './Reducer'
+import Context from '../Context'
 import SearchBar from './SearchBar'
 
 export {
-    Reducer,
+    Context,
     SearchBar
 }

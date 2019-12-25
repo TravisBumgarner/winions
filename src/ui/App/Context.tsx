@@ -14,9 +14,7 @@ const EMPTY_STATE: State = {
     searchTerm: 'finx the minx'
 }
 
-const context = React.createContext<State>({
-    ...EMPTY_STATE
-})
+const context = React.createContext({ state: EMPTY_STATE, dispatch: () => { } } as { state: State, dispatch: React.Dispatch<Action> })
 
 type ErroredAction = { type: 'ERRORED' }
 type NewSearchTerm = { type: 'NEW_SEARCH_TERM', searchTerm: string }
@@ -25,7 +23,6 @@ type NewSearchAction = { type: 'NEW_SEARCH' }
 type Action = ErroredAction | NewSearchAction | NewSearchTerm
 
 const reducer = (state: State, action: Action): State => {
-    console.log(action)
     switch (action.type) {
         case 'NEW_SEARCH': {
             return { ...state, isSearching: true }
@@ -40,16 +37,17 @@ const reducer = (state: State, action: Action): State => {
     }
 }
 
-// const ResultsContext = ({ children }) => {
-//     const [state, dispatch] = React.useReducer(reducer, EMPTY_STATE)
+const ResultsContext = ({ children }) => {
+    const [state, dispatch] = React.useReducer(reducer, EMPTY_STATE)
 
-//     const Provider = context.Provider
+    const Provider = context.Provider
 
-//     return (
-//         <Provider value={{ ...state }}>
-//             {children}
-//         </Provider>
-//     )
-// }
+    return (
+        <Provider value={{ state, dispatch }}>
+            {children}
+        </Provider>
+    )
+}
 
-export { reducer, EMPTY_STATE, Action }
+export default ResultsContext
+export { context }

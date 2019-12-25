@@ -1,7 +1,7 @@
 import * as React from 'react'
 import axios from 'axios'
 
-import { Reducer } from './Reducer'
+import { context } from '../Context'
 
 const handleSubmit = (event) => {
     event.preventDefault();
@@ -18,18 +18,21 @@ const handleSubmit = (event) => {
 }
 
 type Props = {
-    searchTerm: string
-    dispatch: (action: Reducer.Action) => void
 }
 
-const SearchBar = ({ searchTerm, dispatch }) => {
+const SearchBar = () => {
+    const { state, dispatch } = React.useContext(context)
 
     return (
         <form onSubmit={handleSubmit}>
             <label>Summoner Name:<input
                 type="text"
-                value={searchTerm}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) => dispatch({ type: 'NEW_SEARCH_TERM', searchTerm: event.target.value })}
+                value={state.searchTerm}
+                onChange={
+                    (event: React.ChangeEvent<HTMLInputElement>) => {
+                        dispatch({ type: 'NEW_SEARCH_TERM', searchTerm: event.target.value })
+                    }
+                }
             /></label>
             <input type="submit" value="Submit" />
         </form>
