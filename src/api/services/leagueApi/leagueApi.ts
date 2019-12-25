@@ -1,9 +1,10 @@
 import axios from 'axios'
 
 import * as config from '../../../../config'
-import { Summoner, Match, MatchMetadata, MatchTimeline } from '../../../shared-types'
+import { Summoner, Match, Metadata, Timeline, ParticipantFrame } from '../../../shared-types'
+import { LeagueSummoner, LeagueMatch, LeagueMetadata, LeagueTimeline, LeagueParticipantFrame } from './LeagueApi.types'
 
-const makeLeagueRequest = async (url, apiNameForErrorHandling, params = {}) => {
+const makeLeagueRequest = async (url: string, apiNameForErrorHandling: string, params = {}) => {
     try {
         const response = await axios({
             method: 'GET',
@@ -35,7 +36,7 @@ const makeLeagueRequest = async (url, apiNameForErrorHandling, params = {}) => {
     }
 }
 
-const getSummonerDetails = async (summonerName): Promise<Summoner | null> => {
+const getSummonerDetails = async (summonerName: string): Promise<Summoner | null> => {
     const url = `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${encodeURIComponent(summonerName)}`
     const summonerDetails = await makeLeagueRequest(url, 'getSummonerDetails')
     return summonerDetails
@@ -50,7 +51,7 @@ const getMatches = async (accountId: string, beginIndex: number = 0, endIndex: n
     const data = await makeLeagueRequest(url, 'getSummonerMatches', params)
 
     if (data.matches) {
-        const matchesMod = data.matches.map(({ timestamp, ...rest }) => ({
+        const matchesMod = data.matches.map(({ timestamp, ...rest }: Match) => ({
             timestamp: new Date(timestamp),
             ...rest,
             accountId
@@ -79,9 +80,9 @@ const bootstrapMatches = async (accountId: string): Promise<Match[] | null> => {
     return matches
 }
 
-const getMetadata = async (gameId: number, accountId: string): Promise<MatchMetadata | null> => {
+const getMetadata = async (gameId: number, accountId: string): Promise<Metadata | null> => {
     const url = `https://na1.api.riotgames.com/lol/match/v4/matches/${gameId}`
-    const matchMetadata = await makeLeagueRequest(url, 'getMatchMetadata')
+    const metadata = await makeLeagueRequest(url, 'metadata')
 
     const {
         seasonId,
@@ -94,9 +95,9 @@ const getMetadata = async (gameId: number, accountId: string): Promise<MatchMeta
         gameDuration,
         gameCreation,
         participantIdentities
-    } = matchMetadata
+    } = metadata
 
-    const { participantId } = participantIdentities.find(({ player }) => player.accountId === accountId)
+    const { participantId } = participantIdentities.find(({ player }: { player: Summoner }) => player.accountId === accountId)
 
     return {
         gameId,
@@ -114,17 +115,17 @@ const getMetadata = async (gameId: number, accountId: string): Promise<MatchMeta
     }
 }
 
-const getTimeline = async (gameId: number, participantId: number): Promise<MatchTimeline | null> => {
+const getTimeline = async (gameId: number, participantId: number): Promise<Timeline | null> => {
     const url = `https://na1.api.riotgames.com/lol/match/v4/timelines/by-match/${gameId}`
-    const matchTimeline = await makeLeagueRequest(url, 'getMatchTimeline')
+    const timeline: LeagueTimeline = await makeLeagueRequest(url, 'getTimeline')
 
-    const getParticipantFrameMod = (participantFrames) => {
-        return Object.values(participantFrames).find((participantFrame: any) => participantFrame.participantId === participantId)
+    const getParticipantFrameMod = (participantFrames: ParticipantFrame) => {
+        return Object.values(participantFrames).find((participantFrame) => participantFrame.participantId === participantId)
     }
 
-    const millisecondsToMinutes = (ms) => Math.round(ms / 60000)
+    const millisecondsToMinutes = (ms: number) => Math.round(ms / 60000)
 
-    const matchTimelineMod = matchTimeline.frames.map(({ timestamp, participantFrames, events }) => {
+    const timelineMod: Timeline = timeline.frames.map(({ timestamp, participantFrames }) => {
         return {
             timestamp: new Date(timestamp),
             minute: millisecondsToMinutes(timestamp),
@@ -133,7 +134,7 @@ const getTimeline = async (gameId: number, participantId: number): Promise<Match
         }
     })
 
-    return matchTimelineMod
+    return timelineMod
 }
 
 export { getSummonerDetails, getMatches, bootstrapMatches, getMetadata, getTimeline }

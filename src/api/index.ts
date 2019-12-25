@@ -5,7 +5,7 @@ import bodyParser from 'body-parser'
 
 import { leagueApi } from './services'
 import * as database from './database'
-import { Summoner, Match, MatchMetadata as Metadata, MatchTimeline as Timeline } from '../shared-types'
+import { Summoner, Match, Metadata, Timeline } from '../shared-types'
 
 const app = express()
 
@@ -70,7 +70,7 @@ const getMetadataBatch = async (gameIds: number[], accountId: string) => {
 
     // Typescript won't let you filter to do type refinement on the return from getMatchMetadata
     const metadataMod: Metadata[] = []
-    metadata.forEach(matchMetadata => matchMetadata && metadataMod.push(matchMetadata))
+    metadata.forEach(e => e && metadataMod.push(e))
 
     return metadataMod
 }

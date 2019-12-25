@@ -1,7 +1,7 @@
 import * as Knex from "knex";
 
 export async function up(knex: Knex): Promise<void> {
-    return knex.schema.createTable('matchMetadata', table => {
+    return knex.schema.createTable('metadata', table => {
         table.integer('seasonId')
         table.integer('queueId')
         table.bigInteger('gameId').primary()
@@ -18,5 +18,5 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-    return knex.schema.dropTable('matchMetadata')
+    return knex.schema.dropTable('metadata')
 }

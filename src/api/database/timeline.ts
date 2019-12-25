@@ -1,9 +1,9 @@
 import knex from '.'
 
-import { MatchTimeline } from '../../shared-types'
+import { Timeline } from '../../shared-types'
 
-const insert = async (gameId: number, matchTimeline: MatchTimeline) => {
-    return knex('matchTimeline').insert(matchTimeline)
+const insert = async (gameId: number, timeline: Timeline) => {
+    return knex('timeline').insert(timeline)
         .then(response => response)
         .catch(error => {
             console.log(error)
@@ -11,11 +11,10 @@ const insert = async (gameId: number, matchTimeline: MatchTimeline) => {
         })
 }
 
-const selectByGameId = async (gameId: number): Promise<MatchTimeline | null> => {
-    const response = await knex('matchTimeline')
-        .select<MatchTimeline[]>()
+const selectByGameId = async (gameId: number): Promise<Timeline | null> => {
+    const response = await knex('timeline')
+        .select<Timeline[]>()
         .where('gameId', gameId)
-    console.log(response)
     return response.length === 1 ? response[0] : null
 }
 

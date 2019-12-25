@@ -16,5 +16,5 @@ const config = {
 } as const
 
 // Because, Knex.
-export default config[process.env.NODE_ENV || 'development']
-module.exports = config[process.env.NODE_ENV || 'development']
+export default config['development']
+module.exports = config['development']

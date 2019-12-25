@@ -1,4 +1,4 @@
-type Summoner = {
+type LeagueSummoner = {
     id: string,
     accountId: string,
     puuid: string,
@@ -9,7 +9,7 @@ type Summoner = {
 }
 
 // https://riot-api-libraries.readthedocs.io/en/latest/roleid.html
-type Match = {
+type LeagueMatch = {
     lane: string
     gameId: number
     champion: number
@@ -21,7 +21,7 @@ type Match = {
     accountId: string
 }
 
-type Metadata = {
+type LeagueMetadata = {
     seasonId: number,
     queueId: number,
     gameId: number,
@@ -36,7 +36,7 @@ type Metadata = {
     accountId: string
 }
 
-type ParticipantFrame = {
+type LeagueParticipantFrame = {
     [key: string]: {
         totalGold: number
         teamScore: number
@@ -51,17 +51,13 @@ type ParticipantFrame = {
     }
 }
 
-type Timeline = {
-    minute: number
-    timestamp: Date
-    participantFrames: string
-    gameId: number
-}[]
-
-export {
-    Summoner,
-    Match,
-    Metadata,
-    Timeline,
-    ParticipantFrame
+type LeagueTimeline = {
+    frameInterval: number
+    frames: {
+        minute: number
+        timestamp: number
+        participantFrames: LeagueParticipantFrame
+    }[]
 }
+
+export { LeagueMatch, LeagueMetadata, LeagueParticipantFrame, LeagueSummoner, LeagueTimeline }
