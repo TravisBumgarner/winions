@@ -12,8 +12,15 @@ const handleSubmit = (summoner: string, dispatch: React.Dispatch<Action>) => {
         .catch(_error => dispatch({ type: 'ERRORED' }))
 }
 
+const SearchBarWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 10vh;
+`
+
 const SearchInput = styled.input`
-    background-color: ${COLOR.TERTIARY};
+    background-color: ${COLOR.ACCENT};
     border: 0;
     padding: 10px;
     font-size: 1em;
@@ -21,23 +28,23 @@ const SearchInput = styled.input`
 `
 
 const SearchButton = styled.button`
-    background-color: ${COLOR.TERTIARY};
+    color: ${COLOR.ACCENT};
+    background-color: ${COLOR.PRIMARY}
     border: 0;
     padding: 10px;
     font-size: 1em;
-    width: 200px;
+    width: 100px;
     margin-left: 10px;
 `
 
 const SearchBar = () => {
     const { state, dispatch } = React.useContext(context)
-    console.log(state)
     return (
-        <div>
-            <label>Summoner Name:</label>
+        <SearchBarWrapper>
             <SearchInput
                 type="text"
                 name="search"
+                placeholder="Summoner Name"
                 value={state.searchTerm}
                 onChange={
                     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +53,7 @@ const SearchBar = () => {
                 }
             />
             <SearchButton onClick={() => handleSubmit(state.searchTerm, dispatch)}>FTW</SearchButton>
-        </div >
+        </SearchBarWrapper >
     )
 }
 

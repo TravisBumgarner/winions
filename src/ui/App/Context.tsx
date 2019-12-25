@@ -18,7 +18,7 @@ const EMPTY_STATE: State = {
     hasErrored: false,
     hasSearched: false,
     isSearching: false,
-    searchTerm: 'finx the minx',
+    searchTerm: '',
     summoner: '',
     summonerDetails: null,
     matches: null,
