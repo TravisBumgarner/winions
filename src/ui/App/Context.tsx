@@ -7,7 +7,6 @@ type State = {
     hasSearched: boolean
     isSearching: boolean
     searchTerm: string
-    summoner: string
     summonerDetails: Summoner | null
     matches: Match[] | null
     metadata: Metadata[] | null
@@ -19,7 +18,6 @@ const EMPTY_STATE: State = {
     hasSearched: false,
     isSearching: false,
     searchTerm: '',
-    summoner: '',
     summonerDetails: null,
     matches: null,
     metadata: null,
@@ -51,7 +49,7 @@ const reducer = (state: State, action: Action): State => {
     switch (action.type) {
         case 'END_SEARCH': {
             const { summonerDetails, matches, metadata, timelines } = action.data
-            return { ...state, isSearching: false, summonerDetails, matches, metadata, timelines }
+            return { ...state, isSearching: false, hasSearched: true, summonerDetails, matches, metadata, timelines }
         }
         case 'ERRORED': {
             return { ...state, hasErrored: true, isSearching: false }
@@ -60,7 +58,7 @@ const reducer = (state: State, action: Action): State => {
             return { ...state, searchTerm: action.searchTerm }
         }
         case 'START_SEARCH': {
-            return { ...state, hasErrored: false, isSearching: true, searchTerm: '', summoner: state.searchTerm }
+            return { ...state, hasErrored: false, isSearching: true, searchTerm: ''}
         }
     }
 }

@@ -1,9 +1,9 @@
 import { createGlobalStyle } from 'styled-components'
 
 const COLOR = {
-    PRIMARY: '#744FC6',
-    SECONDARY: '#1f2631',
-    ACCENT: '#FDFFFC'
+    PRIMARY: '#CCD7C5',
+    SECONDARY: '#101935',
+    ACCENT: '#9AD4D6'
 }
 
 const GlobalStyle = createGlobalStyle`

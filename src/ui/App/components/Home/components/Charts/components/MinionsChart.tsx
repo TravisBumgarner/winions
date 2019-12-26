@@ -1,4 +1,4 @@
-import { ResponsiveContainer, Label, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts'
+import { ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -16,8 +16,6 @@ const ChartTitle = styled.h3`
     color: ${COLOR.ACCENT};
 `
 
-
-
 type Props = {
     minute: string
     data: {
@@ -29,13 +27,12 @@ type Props = {
 const MinionsChart = ({ minute, data }: Props) => {
     return (
         <MinionsChartWrapper>
-            <ChartTitle>{`CS at ${minute} Minutes`}</ChartTitle>
+            <ChartTitle>{`${minute} Minutes`}</ChartTitle>
             <ResponsiveContainer width={300} height={300}>
                 <BarChart data={data} margin={{ top: 0, right: 20, bottom: 20, left: 0 }}>
                     <CartesianGrid stroke={COLOR.ACCENT} strokeDasharray="3 3" />
-                    <XAxis dataKey="name" stroke={COLOR.PRIMARY} />
-                    <YAxis stroke={COLOR.PRIMARY} width={40} />
-                    <Tooltip cursor={{ fill: 'transparent' }} />
+                    <XAxis dataKey="name" stroke={COLOR.ACCENT} />
+                    <YAxis stroke={COLOR.ACCENT} width={40} />
                     <Bar
                         dataKey="kills"
                         fill={COLOR.PRIMARY}

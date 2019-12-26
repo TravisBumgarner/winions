@@ -20,16 +20,17 @@ const SearchBarWrapper = styled.div`
 `
 
 const SearchInput = styled.input`
-    background-color: ${COLOR.ACCENT};
+    background-color: ${COLOR.PRIMARY};
+    color: ${COLOR.SECONDARY};
     border: 0;
     padding: 10px;
     font-size: 1em;
     width: 300px;
 `
 
-const SearchButton = styled.button`
-    color: ${COLOR.ACCENT};
-    background-color: ${COLOR.PRIMARY}
+const SearchButton = styled.button` 
+    background-color: ${COLOR.ACCENT}
+    color: ${COLOR.SECONDARY};
     border: 0;
     padding: 10px;
     font-size: 1em;
@@ -42,6 +43,7 @@ const SearchBar = () => {
     return (
         <SearchBarWrapper>
             <SearchInput
+                autoComplete="on"
                 type="text"
                 name="search"
                 placeholder="Summoner Name"

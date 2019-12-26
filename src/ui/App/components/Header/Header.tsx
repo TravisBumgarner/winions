@@ -7,11 +7,11 @@ const HeaderWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 4em;
+    height: 6em;
 `
 
 const Title = styled.h1`
-    font-size: 3em;
+    font-size: 5em;
     font-weight: 900;
 `
 

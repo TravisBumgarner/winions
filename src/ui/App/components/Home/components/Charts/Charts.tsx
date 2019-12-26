@@ -15,12 +15,17 @@ const truncateDate = (rawDate: any) => {
 const ChartsWrapper = styled.div`
 `
 
-const ChartWrapper = styled.div``
+const ChartWrapper = styled.div`
+    margin-bottom: 2em;
+    margin-top: 2em;
+`
 
 const ChartSectionTitle = styled.h2`
     font-size: 2.2em;
     font-weight: 900;
     color: ${COLOR.ACCENT}
+    text-align: center;
+    margin-bottom: 1em;
 `
 
 const MinionsChartWrapper = styled.div`
@@ -78,7 +83,7 @@ const Charts = () => {
     return (
         <ChartsWrapper>
             <ChartWrapper>
-                <ChartSectionTitle>{`Charts for: ${summoner}`}</ChartSectionTitle>
+                <ChartSectionTitle>{`CS By Minute`}</ChartSectionTitle>
                 <MinionsChartWrapper >
                     <MinionsChart minute={'5'} data={Min5Data} />
                     <MinionsChart minute={'10'} data={Min10Data} />
