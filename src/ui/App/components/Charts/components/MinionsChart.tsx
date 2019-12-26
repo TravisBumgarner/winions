@@ -2,6 +2,8 @@ import { ResponsiveContainer, Label, BarChart, Bar, CartesianGrid, XAxis, YAxis,
 import React from 'react'
 import styled from 'styled-components'
 
+import { COLOR } from '../../../Theme'
+
 const MinionsChartWrapper = styled.div`
     display: flex;
     flex-direction: column;
@@ -11,9 +13,10 @@ const ChartTitle = styled.h3`
     font-size: 1.5em;
     text-align: center;
     margin-bottom: 0.25em;
+    color: ${COLOR.ACCENT};
 `
 
-import { COLOR } from '../../../Theme'
+
 
 type Props = {
     minute: string
@@ -26,6 +29,7 @@ type Props = {
 const MinionsChart = ({ minute, data }: Props) => {
     return (
         <MinionsChartWrapper>
+            <ChartTitle>{`CS at ${minute} Minutes`}</ChartTitle>
             <ResponsiveContainer width={300} height={300}>
                 <BarChart data={data} margin={{ top: 0, right: 20, bottom: 20, left: 0 }}>
                     <CartesianGrid stroke={COLOR.ACCENT} strokeDasharray="3 3" />

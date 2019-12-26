@@ -12,6 +12,7 @@ const GlobalStyle = createGlobalStyle`
         color: ${COLOR.PRIMARY}
         font-size: 16px;
         font-family: 'Raleway', sans-serif;
+        padding: 2em;
     }
 `
 

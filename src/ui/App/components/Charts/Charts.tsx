@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import { context } from '../../Context'
 import { MinionsChart } from './components'
+import { COLOR } from '../../Theme'
 
 const truncateDate = (rawDate: any) => {
     const [date, _time] = rawDate.split('T')
@@ -11,7 +12,20 @@ const truncateDate = (rawDate: any) => {
 
 }
 
-const MinionsChartWrapper = styled.div``
+const ChartsWrapper = styled.div`
+`
+
+const ChartSectionTitle = styled.h2`
+    font-size: 2.2em;
+    font-weight: 900;
+    color: ${COLOR.ACCENT}
+`
+
+const MinionsChartWrapper = styled.div`
+    width: 100vw;
+    height: 400px;
+    display: flex;
+`
 
 const Charts = () => {
     const { state } = React.useContext(context)
@@ -59,12 +73,15 @@ const Charts = () => {
         }
     })
     return (
-        <div style={{ width: '100vw', height: '400px' }}>
-            <MinionsChart minute={'5'} data={Min5Data} />
-            <MinionsChart minute={'10'} data={Min10Data} />
-            <MinionsChart minute={'15'} data={Min15Data} />
-            <MinionsChart minute={'20'} data={Min20Data} />
-        </div>
+        <ChartsWrapper>
+            <ChartSectionTitle>{`Charts for: ${summoner}`}</ChartSectionTitle>
+            <MinionsChartWrapper >
+                <MinionsChart minute={'5'} data={Min5Data} />
+                <MinionsChart minute={'10'} data={Min10Data} />
+                <MinionsChart minute={'15'} data={Min15Data} />
+                <MinionsChart minute={'20'} data={Min20Data} />
+            </MinionsChartWrapper>
+        </ChartsWrapper>
     )
 }
 
