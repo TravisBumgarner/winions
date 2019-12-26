@@ -1,9 +1,9 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { context } from '../../Context'
+import { context } from '../../../../Context'
 import { MinionsChart } from './components'
-import { COLOR } from '../../Theme'
+import { COLOR } from '../../../../Theme'
 
 const truncateDate = (rawDate: any) => {
     const [date, _time] = rawDate.split('T')

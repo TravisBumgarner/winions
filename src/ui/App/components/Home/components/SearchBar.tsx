@@ -2,8 +2,8 @@ import * as React from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
 
-import { context, Action } from '../Context'
-import { COLOR } from '../Theme'
+import { context, Action } from '../../../Context'
+import { COLOR } from '../../../Theme'
 
 const handleSubmit = (summoner: string, dispatch: React.Dispatch<Action>) => {
     dispatch({ type: 'START_SEARCH' })

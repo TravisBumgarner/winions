@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Context from './Context'
-import { SearchBar, Charts, Header, Footer } from './components'
+import { Home, Header, Footer } from './components'
 import { GlobalStyle } from './Theme'
 
 const AppWrapper = styled.div``
@@ -14,8 +14,7 @@ const App = () => {
             <GlobalStyle />
             <Context>
                 <Header />
-                <SearchBar />
-                <Charts />
+                <Home />
                 <Footer />
             </Context>
         </AppWrapper>

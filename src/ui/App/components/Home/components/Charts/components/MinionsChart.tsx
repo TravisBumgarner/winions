@@ -2,7 +2,7 @@ import { ResponsiveContainer, Label, BarChart, Bar, CartesianGrid, XAxis, YAxis,
 import React from 'react'
 import styled from 'styled-components'
 
-import { COLOR } from '../../../Theme'
+import { COLOR } from '../../../../../Theme'
 
 const MinionsChartWrapper = styled.div`
     display: flex;

@@ -1,13 +1,11 @@
 import Context from '../Context'
-import SearchBar from './SearchBar'
-import Charts from './Charts'
 import Header from './Header'
 import Footer from './Footer'
+import Home from './Home'
 
 export {
     Context,
-    SearchBar,
-    Charts,
     Header,
-    Footer
+    Footer,
+    Home
 }
