@@ -11,6 +11,7 @@ const GlobalStyle = createGlobalStyle`
         background-color: ${COLOR.SECONDARY};
         color: ${COLOR.PRIMARY}
         font-size: 16px;
+        font-family: 'Raleway', sans-serif;
     }
 `
 

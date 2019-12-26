@@ -1,4 +1,5 @@
 import * as React from 'react'
+import styled from 'styled-components'
 
 import { context } from '../../Context'
 import { MinionsChart } from './components'
@@ -9,6 +10,8 @@ const truncateDate = (rawDate: any) => {
     return `${month}-${day}`
 
 }
+
+const MinionsChartWrapper = styled.div``
 
 const Charts = () => {
     const { state } = React.useContext(context)
@@ -56,8 +59,7 @@ const Charts = () => {
         }
     })
     return (
-        <div style={{ width: '100vw', height: '400px', display: 'flex' }}>
-            <h2>Charts for {summoner}</h2>
+        <div style={{ width: '100vw', height: '400px' }}>
             <MinionsChart minute={'5'} data={Min5Data} />
             <MinionsChart minute={'10'} data={Min10Data} />
             <MinionsChart minute={'15'} data={Min15Data} />
