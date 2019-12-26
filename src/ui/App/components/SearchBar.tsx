@@ -16,7 +16,7 @@ const SearchBarWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 10vh;
+    height: 3em;
 `
 
 const SearchInput = styled.input`

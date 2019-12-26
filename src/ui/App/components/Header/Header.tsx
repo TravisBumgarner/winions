@@ -7,7 +7,7 @@ const HeaderWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 10vh;
+    height: 4em;
 `
 
 const Title = styled.h1`
@@ -23,21 +23,13 @@ const HighlightedTitle = "For The Winions"
     .split(' ')
     .map(word => <><HighlightedText>{word[0]}</HighlightedText>{word.slice(1)}</>)
 
-const ItalicTitle = styled.span`
-    text-decoration: italics;
-    font-style: italic;
-    font-weight: 100;
-    font-size: 0.75em;
-`
-
 const Header = () => {
     return (
         <HeaderWrapper>
             <Title>
                 <HighlightedText>F</HighlightedText>OR&nbsp;&nbsp;
                 <HighlightedText>T</HighlightedText>HE&nbsp;&nbsp;
-                <HighlightedText>W</HighlightedText>INIONS&nbsp;&nbsp;
-                <ItalicTitle>(OR FOR YOU)</ItalicTitle>
+                <HighlightedText>W</HighlightedText>INIONS
             </Title >
         </HeaderWrapper>
     )
